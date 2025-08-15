@@ -1,9 +1,9 @@
 {
-  "locale": "it_IT",
+  "locale": "it",
   "name": "it (IT)",
   "translations": {
     "Llamar": "Chiamare",
-    "Contacto": "Contattare",
+    "Contáctanos": "Contattaci",
     "Change language": "Cambia lingua",
     "Inscripciones Abiertas": "Iscrizioni Aperte",
     "Clases de Inglés": "Corsi di Inglese",
@@ -316,7 +316,9 @@
     "19 de agosto - Inauguración del salón Giuseppe Verdi en el segundo piso, completando una importante etapa de expansión para la institución.": "19 agosto - Inaugurazione del salone Giuseppe Verdi al secondo piano, completando un'importante fase di espansione per l'istituzione.",
     "Desde su formación, nuestra subcomisión de cultura ha trabajado profesionalmente en la programación de eventos culturales anuales como la Semana de la Cultura, proporcionando un espacio donde artistas, gruppi e istituzioni di città possono mostrare i loro talenti.": "Dalla sua formazione, la nostra sottocommissione culturale ha lavorato professionalmente nella programmazione di eventi culturali annuali come la Settimana della Cultura, fornendo uno spazio dove artisti, gruppi e istituzioni della città possono mostrare i loro talenti.",
     "Inicio": "Inizio",
+    "Nosotros": "Noi",
     "Eventos": "Eventi",
+    "Servicios": "Servizi",
     "Trámites": "Pratiche",
     "Historia": "Storia",
     "Nuestro cóctel de moda anual, que comenzó como un pequeño evento, se ha convertido en un acontecimiento insignia de la ciudad, contando con figuras de primera línea en el mundo de la moda y recaudando fondos para instituciones locales necesitadas.": "Il nostro cocktail di moda annuale, iniziato come un piccolo evento, è diventato un appuntamento simbolo della città, contando su figure di spicco nel mondo della moda e raccogliendo fondi per istituzioni locali bisognose.",

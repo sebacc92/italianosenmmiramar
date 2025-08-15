@@ -1,9 +1,9 @@
 {
-  "locale": "es_AR",
+  "locale": "es",
   "name": "es (AR)",
   "translations": {
     "Llamar": "",
-    "Contacto": "",
+    "Contáctanos": "",
     "Change language": "",
     "Inscripciones Abiertas": "",
     "Clases de Inglés": "",
@@ -316,7 +316,9 @@
     "19 de agosto - Inauguración del salón Giuseppe Verdi en el segundo piso, completando una importante etapa de expansión para la institución.": "",
     "Desde su formación, nuestra subcomisión de cultura ha trabajado profesionalmente en la programación de eventos culturales anuales como la Semana de la Cultura, proporcionando un espacio donde artistas, grupos e instituciones de la ciudad pueden mostrar sus talentos.": "",
     "Inicio": "",
+    "Nosotros": "",
     "Eventos": "",
+    "Servicios": "",
     "Trámites": "",
     "Historia": "",
     "Danzas \"Ritmos Latinos\"": "",
