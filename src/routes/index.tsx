@@ -1,25 +1,8 @@
-import { component$ } from "@builder.io/qwik";
-import type { DocumentHead } from "@builder.io/qwik-city";
+import type {RequestHandler} from '@builder.io/qwik-city'
+import {guessLocale} from 'compiled-i18n'
 
-export default component$(() => {
-  return (
-    <>
-      <h1>Hi 👋</h1>
-      <div>
-        Can't wait to see what you build with qwik!
-        <br />
-        Happy coding.
-      </div>
-    </>
-  );
-});
-
-export const head: DocumentHead = {
-  title: "Welcome to Qwik",
-  meta: [
-    {
-      name: "description",
-      content: "Qwik site description",
-    },
-  ],
-};
+export const onGet: RequestHandler = async ({request, redirect, url}) => {
+	const acceptLang = request.headers.get('accept-language')
+	const guessedLocale = guessLocale(acceptLang)
+	throw redirect(301, `/${guessedLocale}/${url.search}`)
+}

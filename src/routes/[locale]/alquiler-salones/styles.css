@@ -1,0 +1,230 @@
+/* Gradient header with Italian flag colors */
+.gradient-header {
+  background: linear-gradient(135deg, 
+    rgba(0, 140, 69, 0.9) 0%, 
+    rgba(255, 255, 255, 0.9) 50%, 
+    rgba(206, 43, 55, 0.9) 100%
+  );
+  background-size: cover;
+  position: relative;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.gradient-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.25);
+  z-index: 1;
+}
+
+.gradient-header > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* Title background for better visibility */
+.gradient-header h1 {
+  position: relative;
+  display: inline-block;
+  padding: 0.5rem 1.5rem;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.gradient-header p {
+  background-color: rgba(0, 0, 0, 0.3);
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  max-width: 90%;
+  margin: 0 auto;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+/* Italian inspired decorative elements */
+.salon-card {
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.salon-card::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, 
+    rgba(0, 140, 69, 1) 0%, 
+    rgba(255, 255, 255, 1) 50%, 
+    rgba(206, 43, 55, 1) 100%
+  );
+  border-radius: 0 0 0.5rem 0.5rem;
+  transition: transform 0.3s ease;
+}
+
+.salon-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.salon-card:hover::after {
+  transform: scaleY(1.5);
+}
+
+.salon-image img {
+  transition: transform 0.6s ease;
+}
+
+.salon-card:hover .salon-image img {
+  transform: scale(1.05);
+}
+
+/* Form styling */
+input:focus, textarea:focus {
+  border-color: hsl(var(--primary));
+}
+
+input[type="radio"] {
+  accent-color: hsl(var(--primary));
+}
+
+/* Enhanced submit button styling */
+button[type="submit"] {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+button[type="submit"]:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+button[type="submit"]::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.4s ease, height 0.4s ease;
+}
+
+button[type="submit"]:hover::after {
+  width: 300px;
+  height: 300px;
+}
+
+button[type="submit"] > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Regular buttons */
+button:not([type="submit"]) {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+button:not([type="submit"])::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.6s ease, height 0.6s ease;
+}
+
+button:not([type="submit"]):hover::after {
+  width: 300px;
+  height: 300px;
+}
+
+/* Animation for success message */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.bg-green-100 {
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .gradient-header {
+    padding: 3rem 1rem;
+  }
+  
+  .contact-info {
+    padding: 1.5rem;
+  }
+
+  .gradient-header h1 {
+    padding: 0.5rem 1rem;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--primary));
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--primary), 0.8);
+}
+
+/* Animated underline for headings */
+h2, h3 {
+  position: relative;
+  display: inline-block;
+}
+
+h2::after {
+  content: '';
+  position: absolute;
+  width: 40%;
+  transform: scaleX(0);
+  height: 2px;
+  bottom: -5px;
+  left: 0;
+  background: linear-gradient(90deg, 
+    rgba(0, 140, 69, 1), 
+    rgba(206, 43, 55, 1)
+  );
+  transform-origin: bottom right;
+  transition: transform 0.3s ease-out;
+}
+
+h2:hover::after {
+  transform: scaleX(1);
+  transform-origin: bottom left;
+} 
