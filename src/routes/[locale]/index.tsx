@@ -1,7 +1,7 @@
 import { component$ } from "@builder.io/qwik";
 import { Link, type DocumentHead } from "@builder.io/qwik-city";
-import { _ } from "compiled-i18n";
-import { LuCalendar, LuMapPin } from "@qwikest/icons/lucide";
+import { _, getLocale } from "compiled-i18n";
+import { LuCalendar, LuMapPin, LuLanguages, LuFileText, LuMusic, LuApple, LuPalette } from "@qwikest/icons/lucide";
 import HeroSlider from "~/components/HeroSlider/HeroSlider";
 import { Button, Card } from "~/components/ui";
 import ImageStory from "~/media/story.jpg?h=500&jsx";
@@ -131,6 +131,7 @@ const eventosOrdenados = [...eventos]
 const eventosProximos = eventosOrdenados.filter(e => e.fechaObj! >= today);
 
 export default component$(() => {
+  const currentLocale = getLocale();
   return (
     <>
       <HeroSlider />
@@ -148,95 +149,113 @@ export default component$(() => {
           </div>
           <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3 max-w-5xl mx-auto">
             {/* Tarjeta Idiomas */}
-            <Card.Root class="transition duration-300 ease-in-out hover:shadow-xl border border-green-600 rounded-xl bg-white/90 shadow-md hover:-translate-y-1 relative overflow-hidden">
-              <div class="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-green-600 via-white to-red-600 rounded-t-xl" />
-              <Card.Header>
+            <Card.Root class="transition duration-300 ease-in-out hover:shadow-xl border border-green-600 rounded-2xl bg-white/95 shadow-md hover:-translate-y-1 relative overflow-hidden text-center">
+              <div class="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-green-600 via-white to-red-600 rounded-t-2xl" />
+              <Card.Header class="flex flex-col items-center">
+                <div class="h-12 w-12 rounded-full bg-green-50 text-green-700 flex items-center justify-center shadow-sm mb-3">
+                  <LuLanguages class="h-6 w-6" />
+                </div>
                 <Card.Title class="text-xl text-gray-800 font-serif tracking-wide">{_`Idiomas`}</Card.Title>
                 <Card.Description class="text-gray-600">{_`Aprende italiano e inglés con nuestros diferentes niveles y propuestas para todas las edades.`}</Card.Description>
               </Card.Header>
-              <Card.Footer class="flex gap-3">
+              <Card.Footer class="flex gap-3 justify-center">
                 <Button class="bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-md transition-all border-2 border-green-700">
-                  <Link href="/clases/italiano" class="w-full">
+                  <Link href={`/${currentLocale}/clases/italiano`} class="w-full">
                     {_`Italiano`}
                   </Link>
                 </Button>
                 <Button class="bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg shadow-md transition-all border-2 border-red-700">
-                  <Link href="/clases/ingles" class="w-full">
+                  <Link href={`/${currentLocale}/clases/ingles`} class="w-full">
                     {_`Inglés`}
                   </Link>
                 </Button>
               </Card.Footer>
             </Card.Root>
             {/* Tarjeta Eventos */}
-            <Card.Root class="transition duration-300 ease-in-out hover:shadow-xl border border-green-600 rounded-xl bg-white/90 shadow-md hover:-translate-y-1 relative overflow-hidden">
-              <div class="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-green-600 via-white to-red-600 rounded-t-xl" />
-              <Card.Header>
+            <Card.Root class="transition duration-300 ease-in-out hover:shadow-xl border border-green-600 rounded-2xl bg-white/95 shadow-md hover:-translate-y-1 relative overflow-hidden text-center">
+              <div class="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-green-600 via-white to-red-600 rounded-t-2xl" />
+              <Card.Header class="flex flex-col items-center">
+                <div class="h-12 w-12 rounded-full bg-emerald-50 text-emerald-700 flex items-center justify-center shadow-sm mb-3">
+                  <LuCalendar class="h-6 w-6" />
+                </div>
                 <Card.Title class="text-xl text-gray-800 font-serif tracking-wide">{_`Eventos Culturales`}</Card.Title>
                 <Card.Description class="text-gray-600">{_`Exposiciones, muestras, charlas y eventos que promueven la cultura italiana.`}</Card.Description>
               </Card.Header>
-              <Card.Footer>
+              <Card.Footer class="flex justify-center">
                 <Button class="bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-md transition-all border-2 border-green-700">
-                  <Link href="/eventos" class="w-full">
+                  <Link href={`/${currentLocale}/eventos`} class="w-full">
                     {_`Ver agenda`}
                   </Link>
                 </Button>
               </Card.Footer>
             </Card.Root>
             {/* Tarjeta Trámites */}
-            <Card.Root class="transition duration-300 ease-in-out hover:shadow-xl border border-green-600 rounded-xl bg-white/90 shadow-md hover:-translate-y-1 relative overflow-hidden">
-              <div class="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-green-600 via-white to-red-600 rounded-t-xl" />
-              <Card.Header>
+            <Card.Root class="transition duration-300 ease-in-out hover:shadow-xl border border-green-600 rounded-2xl bg-white/95 shadow-md hover:-translate-y-1 relative overflow-hidden text-center">
+              <div class="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-green-600 via-white to-red-600 rounded-t-2xl" />
+              <Card.Header class="flex flex-col items-center">
+                <div class="h-12 w-12 rounded-full bg-red-50 text-red-600 flex items-center justify-center shadow-sm mb-3">
+                  <LuFileText class="h-6 w-6" />
+                </div>
                 <Card.Title class="text-xl text-gray-800 font-serif tracking-wide">{_`Trámites de Ciudadanía`}</Card.Title>
                 <Card.Description class="text-gray-600">{_`Asesoramiento y apoyo en los trámites para obtener la ciudadanía italiana.`}</Card.Description>
               </Card.Header>
-              <Card.Footer>
+              <Card.Footer class="flex justify-center">
                 <Button class="bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg shadow-md transition-all border-2 border-red-700">
-                  <Link href="/tramites" class="w-full">
+                  <Link href={`/${currentLocale}/tramites`} class="w-full">
                     {_`Asesoría`}
                   </Link>
                 </Button>
               </Card.Footer>
             </Card.Root>
             {/* Tarjeta Danzas Ritmos Latinos */}
-            <Card.Root class="transition duration-300 ease-in-out hover:shadow-xl border border-green-600 rounded-xl bg-white/90 shadow-md hover:-translate-y-1 relative overflow-hidden">
-              <div class="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-green-600 via-white to-red-600 rounded-t-xl" />
-              <Card.Header>
-                <Card.Title class="text-xl text-gray-800 font-serif tracking-wide">{_`danzas_ritmos_latinos`}</Card.Title>
+            <Card.Root class="transition duration-300 ease-in-out hover:shadow-xl border border-green-600 rounded-2xl bg-white/95 shadow-md hover:-translate-y-1 relative overflow-hidden text-center">
+              <div class="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-green-600 via-white to-red-600 rounded-t-2xl" />
+              <Card.Header class="flex flex-col items-center">
+                <div class="h-12 w-12 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center shadow-sm mb-3">
+                  <LuMusic class="h-6 w-6" />
+                </div>
+                <Card.Title class="text-xl text-gray-800 font-serif tracking-wide">{_`titulo_danzas_ritmos_en_accion`}</Card.Title>
                 <Card.Description class="text-gray-600">{_`Clases y talleres de danzas latinas para todas las edades. Vení a moverte y divertirte aprendiendo ritmos como salsa, bachata y más.`}</Card.Description>
               </Card.Header>
-              <Card.Footer>
+              <Card.Footer class="flex justify-center">
                 <Button class="bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-md transition-all border-2 border-green-700">
-                  <Link href="/clases" class="w-full">
+                  <Link href={`/${currentLocale}/clases/danzas`} class="w-full">
                     {_`Ver más`}
                   </Link>
                 </Button>
               </Card.Footer>
             </Card.Root>
             {/* Tarjeta Nutrición */}
-            <Card.Root class="transition duration-300 ease-in-out hover:shadow-xl border border-green-600 rounded-xl bg-white/90 shadow-md hover:-translate-y-1 relative overflow-hidden">
-              <div class="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-green-600 via-white to-red-600 rounded-t-xl" />
-              <Card.Header>
+            <Card.Root class="transition duration-300 ease-in-out hover:shadow-xl border border-green-600 rounded-2xl bg-white/95 shadow-md hover:-translate-y-1 relative overflow-hidden text-center">
+              <div class="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-green-600 via-white to-red-600 rounded-t-2xl" />
+              <Card.Header class="flex flex-col items-center">
+                <div class="h-12 w-12 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center shadow-sm mb-3">
+                  <LuApple class="h-6 w-6" />
+                </div>
                 <Card.Title class="text-xl text-gray-800 font-serif tracking-wide">{_`Nutrición`}</Card.Title>
                 <Card.Description class="text-gray-600">{_`Charlas, talleres y asesoramiento sobre alimentación saludable y bienestar, a cargo de profesionales.`}</Card.Description>
               </Card.Header>
-              <Card.Footer>
+              <Card.Footer class="flex justify-center">
                 <Button class="bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg shadow-md transition-all border-2 border-red-700">
-                  <Link href="/eventos" class="w-full">
+                  <Link href={`/${currentLocale}/eventos`} class="w-full">
                     {_`Próximas actividades`}
                   </Link>
                 </Button>
               </Card.Footer>
             </Card.Root>
             {/* Tarjeta Exposición de obras */}
-            <Card.Root class="transition duration-300 ease-in-out hover:shadow-xl border border-green-600 rounded-xl bg-white/90 shadow-md hover:-translate-y-1 relative overflow-hidden">
-              <div class="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-green-600 via-white to-red-600 rounded-t-xl" />
-              <Card.Header>
+            <Card.Root class="transition duration-300 ease-in-out hover:shadow-xl border border-green-600 rounded-2xl bg-white/95 shadow-md hover:-translate-y-1 relative overflow-hidden text-center">
+              <div class="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-green-600 via-white to-red-600 rounded-t-2xl" />
+              <Card.Header class="flex flex-col items-center">
+                <div class="h-12 w-12 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center shadow-sm mb-3">
+                  <LuPalette class="h-6 w-6" />
+                </div>
                 <Card.Title class="text-xl text-gray-800 font-serif tracking-wide">{_`Exposición de obras`}</Card.Title>
                 <Card.Description class="text-gray-600">{_`Espacio para artistas locales y regionales. Exhibiciones de pintura, fotografía y otras expresiones artísticas.`}</Card.Description>
               </Card.Header>
-              <Card.Footer>
+              <Card.Footer class="flex justify-center">
                 <Button class="bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-md transition-all border-2 border-green-700">
-                  <Link href="/eventos" class="w-full">
+                  <Link href={`/${currentLocale}/eventos`} class="w-full">
                     {_`Ver exposiciones`}
                   </Link>
                 </Button>
@@ -291,7 +310,7 @@ export default component$(() => {
                 </Card.Content> */}
                 <Card.Footer class="mt-auto pt-4">
                   <Button class="bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg shadow-md transition-all border-2 border-red-700">
-                    <Link href={`/eventos/${evento.id}`} class="w-full">
+                    <Link href={`/${currentLocale}/eventos/${evento.id}`} class="w-full">
                       {_`Ver más`}
                     </Link>
                   </Button>
@@ -302,7 +321,7 @@ export default component$(() => {
           {eventosProximos.length > 3 && ( // Mostrar botón "Ver todos" solo si hay más de 3 eventos
             <div class="text-center mt-12">
               <Button class="bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-md transition-all border-2 border-green-700">
-                <Link href="/eventos">
+                <Link href={`/${currentLocale}/eventos`}>
                   {_`Ver todos los eventos`}
                 </Link>
               </Button>
@@ -326,7 +345,7 @@ export default component$(() => {
                 {_`Desde 1889, somos un pilar de la cultura italiana en Miramar. Nacimos para apoyar a los inmigrantes y hoy seguimos promoviendo el idioma, las tradiciones y el encuentro cultural. Con 136 años de historia, evolucionamos manteniendo nuestro corazón italiano.`}
               </p>
               <Button>
-                <Link href="/historia">
+                <Link href={`/${currentLocale}/nosotros`}>
                   {_`Conoce más`}
                 </Link>
               </Button>
@@ -346,14 +365,14 @@ export default component$(() => {
               </p>
               <div class="flex flex-wrap justify-center gap-4">
                 <div>
-                  <Link href="/contacto" class="w-full">
+                  <Link href={`/${currentLocale}/contacto`} class="w-full">
                     <Button class="bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-md transition-all border-2 border-green-700">
                       {_`Hazte socio`}
                     </Button>
                   </Link>
                 </div>
                 <div>
-                  <Link href="/proyectos" class="w-full">
+                  <Link href={`/${currentLocale}/proyectos`} class="w-full">
                     <Button class="bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg shadow-md transition-all border-2 border-red-700">
                       {_`Presenta tu proyecto`}
                     </Button>
