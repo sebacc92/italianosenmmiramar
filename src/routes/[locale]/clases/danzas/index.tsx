@@ -131,19 +131,34 @@ const Hero = component$(() => {
   });
   return (
     <section class="relative min-h-[80vh] md:min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-green-50 via-white to-lime-50">
+      <style>
+        {`
+        @keyframes heartbeat {
+          0%, 100% { transform: scale(1); }
+          25% { transform: scale(1.04); }
+          40% { transform: scale(1); }
+          60% { transform: scale(1.06); }
+          80% { transform: scale(1); }
+        }
+        .animate-heartbeat { animation: heartbeat 2.6s ease-in-out infinite; will-change: transform; }
+        `}
+      </style>
       <div class="container mx-auto px-4 text-center relative z-10">
         <div class="max-w-4xl mx-auto">
           <div class="mb-8">
             <img
-              src="/images/ritmos-logo.png"
+              src="/images/ritmos-en-accion/logo.png"
               alt="Ritmos en Acción"
-              class="mx-auto mb-4 w-28 h-28 object-contain"
-              width={112}
-              height={112}
+              class="mx-auto mb-4 w-48 h-48 object-contain"
+              width={256}
+              height={256}
               loading="lazy"
             />
-            <h1 class="text-5xl md:text-7xl font-bold text-primary mb-4">RITMOS EN ACCIÓN</h1>
-            <div class="flex items-center justify-center gap-4 text-2xl md:text-3xl text-muted-foreground mb-6">
+            <h1 class="text-5xl md:text-7xl lg:text-8xl font-bold text-primary mb-4 animate-heartbeat leading-[0.95] tracking-tight">
+              <span class="block">RITMOS</span>
+              <span class="block">EN ACCIÓN</span>
+            </h1>
+            <div class="flex items-center justify-center gap-4 text-2xl md:text-3xl text-muted-foreground mb-6 animate-heartbeat">
               <LuMusic class="w-8 h-8" />
               <span class="font-medium">ESCUELA DE DANZA</span>
               <LuHeart class="w-8 h-8" />
@@ -206,6 +221,79 @@ const Values = component$(() => {
             </Card.Root>
           ))}
         </div>
+      </div>
+    </section>
+  );
+});
+
+const Gallery = component$(() => {
+  const images = Array.from({ length: 55 }, (_, i) => i + 1);
+  const visibleCount = useSignal(10);
+  const selectedImage = useSignal<number | null>(null);
+  
+  const showMore = $(() => {
+    visibleCount.value = Math.min(visibleCount.value + 10, 55);
+  });
+  
+  const openModal = $((num: number) => {
+    selectedImage.value = num;
+  });
+  
+  const closeModal = $(() => {
+    selectedImage.value = null;
+  });
+  
+  return (
+    <section class="py-20 bg-background">
+      <div class="container mx-auto px-4">
+        <div class="text-center mb-16">
+          <h2 class="text-4xl md:text-5xl font-bold text-primary mb-6">GALERÍA</h2>
+          <p class="text-xl text-muted-foreground max-w-2xl mx-auto">Momentos especiales de nuestra escuela de danza</p>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 max-w-7xl mx-auto">
+          {images.slice(0, visibleCount.value).map((num) => (
+            <div key={num} class="aspect-square overflow-hidden rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 cursor-pointer" onClick$={() => openModal(num)}>
+              <img
+                src={`/images/ritmos-en-accion/${num}.jpeg`}
+                alt={`Ritmos en Acción - Imagen ${num}`}
+                class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                loading="lazy"
+              />
+            </div>
+          ))}
+        </div>
+        
+        {visibleCount.value < 55 && (
+          <div class="text-center mt-12">
+            <Button look="outline" class="px-8 py-3" onClick$={showMore}>
+              Ver más fotos ({55 - visibleCount.value} restantes)
+            </Button>
+          </div>
+        )}
+        
+        {/* Modal */}
+        {selectedImage.value && (
+          <div
+            class="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50"
+            onClick$={closeModal}
+          >
+            <div class="relative max-w-4xl max-h-[90vh] w-full" onClick$={(e) => e.stopPropagation()}>
+              <button
+                class="absolute top-4 right-4 z-10 bg-white/20 hover:bg-white/30 text-white rounded-full p-2 transition-colors"
+                onClick$={closeModal}
+              >
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+              </button>
+              <img
+                src={`/images/ritmos-en-accion/${selectedImage.value}.jpeg`}
+                alt={`Ritmos en Acción - Imagen ${selectedImage.value}`}
+                class="w-full h-full object-contain rounded-lg"
+              />
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );
@@ -353,9 +441,10 @@ const Contact = component$(() => {
                 <div class="bg-primary/10 rounded-lg p-8">
                   <h3 class="text-2xl font-bold text-primary mb-4">¿Listo para comenzar tu viaje en la danza?</h3>
                   <p class="text-muted-foreground mb-6">Contáctanos para más información sobre nuestras clases, horarios y precios. ¡Te esperamos en Ritmos en Acción!</p>
-                  <Button look="primary" class="text-lg px-8 py-6" onClick$={() => window.open("https://wa.me/2235380187", "_blank")}>
-                    <LuPhone class="w-5 h-5 mr-2" />
-                    Contactar por WhatsApp
+                  <Button look="primary" class="text-sm sm:text-lg px-4 sm:px-8 py-4 sm:py-6 w-full sm:w-auto" onClick$={() => window.open("https://wa.me/2235380187", "_blank")}>
+                    <LuPhone class="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+                    <span class="hidden sm:inline">Contactar por WhatsApp</span>
+                    <span class="sm:hidden">WhatsApp</span>
                   </Button>
                 </div>
               </div>
@@ -397,6 +486,7 @@ export default component$(() => {
       <main class="flex-1">
         <Hero />
         <Values />
+        <Gallery />
         <Schedule />
         <Contact />
       </main>
