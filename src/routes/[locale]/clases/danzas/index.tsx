@@ -302,6 +302,17 @@ const Gallery = component$(() => {
 const Schedule = component$(() => {
   const selectedClass = useSignal<ScheduleItem | null>(null);
   const onClose = $(() => (selectedClass.value = null));
+  const expandedDays = useSignal<Set<string>>(new Set());
+  
+  const toggleDay = $((day: string) => {
+    const newExpanded = new Set(expandedDays.value);
+    if (newExpanded.has(day)) {
+      newExpanded.delete(day);
+    } else {
+      newExpanded.add(day);
+    }
+    expandedDays.value = newExpanded;
+  });
 
   return (
     <section id="schedule" class="py-20 bg-green-50">
@@ -310,7 +321,8 @@ const Schedule = component$(() => {
           <h2 class="text-4xl md:text-5xl font-bold text-primary mb-6">CRONOGRAMA DE ACTIVIDADES</h2>
           <p class="text-xl text-muted-foreground max-w-2xl mx-auto">Descubre nuestras clases organizadas por días y horarios</p>
         </div>
-        <div class="grid grid-cols-1 gap-6 lg:grid-cols-5 max-w-7xl mx-auto">
+        {/* Desktop Grid View */}
+        <div class="hidden lg:grid grid-cols-5 gap-6 max-w-7xl mx-auto">
           {dayOrder.map((day) => {
             const classes = scheduleData[day] || [];
             return (
@@ -351,6 +363,64 @@ const Schedule = component$(() => {
                 ))}
               </Card.Content>
             </Card.Root>
+            );
+          })}
+        </div>
+
+        {/* Mobile Accordion View */}
+        <div class="lg:hidden space-y-4 max-w-2xl mx-auto">
+          {dayOrder.map((day) => {
+            const classes = scheduleData[day] || [];
+            const isExpanded = expandedDays.value.has(day);
+            return (
+              <Card.Root key={day} class="bg-green-100/70 rounded-xl overflow-hidden">
+                <button
+                  class="w-full p-4 text-left bg-primary text-white font-bold flex items-center justify-between"
+                  onClick$={() => toggleDay(day)}
+                >
+                  <span>{dayNames[day]}</span>
+                  <svg
+                    class={`w-5 h-5 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                {isExpanded && (
+                  <Card.Content class="p-4 space-y-2">
+                    {classes.map((classItem) => (
+                      <button
+                        key={classItem.id}
+                        class={`w-full text-left p-3 rounded-lg leading-tight shadow-sm ${typeClasses[classItem.type]}`}
+                        onClick$={() => (selectedClass.value = classItem)}
+                      >
+                        <div class="text-sm font-semibold mb-1">{classItem.name}</div>
+                        <div class="text-xs opacity-90 flex items-center gap-1">
+                          <LuClock class="w-3 h-3" />
+                          {classItem.time}
+                        </div>
+                        <div class="text-xs opacity-90 flex items-center gap-1 mt-1">
+                          <LuMapPin class="w-3 h-3" />
+                          {classItem.room}
+                        </div>
+                        {classItem.ageGroup && (
+                          <div class="text-xs opacity-90 flex items-center gap-1 mt-1">
+                            <LuUsers class="w-3 h-3" />
+                            {classItem.ageGroup}
+                          </div>
+                        )}
+                        {classItem.level && (
+                          <span class="inline-block mt-1 text-[10px] px-2 py-0.5 rounded bg-white/85 text-black">
+                            {classItem.level}
+                          </span>
+                        )}
+                      </button>
+                    ))}
+                  </Card.Content>
+                )}
+              </Card.Root>
             );
           })}
         </div>

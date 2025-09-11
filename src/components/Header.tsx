@@ -58,12 +58,14 @@ export default component$(() => {
                 <p class="text-[10px] md:text-sm font-medium tracking-wide text-gray-600 uppercase">Miramar - Buenos Aires</p>
               </div>
             </Link>
-            <button class="md:hidden ml-2" aria-label="Menu" onClick$={() => mobileMenuOpen.value = true}>
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            </button>
           </div>
+
+          {/* Mobile menu button - moved to the right */}
+          <button class="md:hidden" aria-label="Menu" onClick$={() => mobileMenuOpen.value = true}>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
 
           {/* Desktop navigation with language selector */}
           <div class="hidden md:flex items-center gap-4 ml-4">
