@@ -51,10 +51,11 @@ export default component$(() => {
                 class="rounded-full w-12 h-12 md:w-20 md:h-20 lg:w-24 lg:h-24 transition-all"
               />
               <div class="block">
-                <p class="text-[11px] md:text-base font-medium leading-none">Mutual Cultural</p>
-                <p class="text-sm md:text-2xl lg:text-3xl font-bold leading-tight whitespace-normal md:whitespace-nowrap max-w-[120px] md:max-w-none">
-                  Círculo Italiano Joven Italia
+                <p class="text-[11px] md:text-base font-medium leading-none text-gray-700">Fundado el 28 de Abril de 1889</p>
+                <p class="text-sm md:text-2xl lg:text-2xl font-bold leading-tight whitespace-normal md:whitespace-nowrap max-w-[120px] md:max-w-none">
+                  Mutual Cultural Círculo Italiano Joven Italia
                 </p>
+                <p class="text-[10px] md:text-sm font-medium tracking-wide text-gray-600 uppercase">Miramar - Buenos Aires</p>
               </div>
             </Link>
             <button class="md:hidden ml-2" aria-label="Menu" onClick$={() => mobileMenuOpen.value = true}>
