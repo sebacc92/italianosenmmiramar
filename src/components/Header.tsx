@@ -48,7 +48,7 @@ export default component$(() => {
             <Link href={`/${currentLocale}`} class="flex items-center gap-2 md:gap-4">
               <Logo
                 alt="Círculo Italiano Miramar Logo"
-                class="rounded-full w-12 h-12 md:w-20 md:h-20 lg:w-24 lg:h-24 transition-all"
+                class="rounded-full w-10 h-10 md:w-20 md:h-20 lg:w-24 lg:h-24 transition-all"
               />
               <div class="block">
                 <p class="text-[11px] md:text-base font-medium leading-none text-gray-700">Fundado el 28 de Abril de 1889</p>

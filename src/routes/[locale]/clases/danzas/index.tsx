@@ -321,8 +321,8 @@ const Schedule = component$(() => {
           <h2 class="text-4xl md:text-5xl font-bold text-primary mb-6">CRONOGRAMA DE ACTIVIDADES</h2>
           <p class="text-xl text-muted-foreground max-w-2xl mx-auto">Descubre nuestras clases organizadas por días y horarios</p>
         </div>
-        {/* Desktop Grid View */}
-        <div class="hidden lg:grid grid-cols-5 gap-6 max-w-7xl mx-auto">
+        {/* Desktop Grid View - 5 columns */}
+        <div class="hidden xl:grid grid-cols-5 gap-6 max-w-7xl mx-auto">
           {dayOrder.map((day) => {
             const classes = scheduleData[day] || [];
             return (
@@ -367,8 +367,54 @@ const Schedule = component$(() => {
           })}
         </div>
 
+        {/* Tablet Grid View - 3 columns */}
+        <div class="hidden md:grid xl:hidden grid-cols-3 gap-4 max-w-5xl mx-auto">
+          {dayOrder.map((day) => {
+            const classes = scheduleData[day] || [];
+            return (
+            <Card.Root key={day} class="bg-green-100/70 rounded-xl p-3">
+              <Card.Header class="pb-3">
+                <Card.Title class="text-center text-sm font-bold text-white bg-primary py-2 rounded-lg">
+                  {dayNames[day]}
+                </Card.Title>
+              </Card.Header>
+              <Card.Content class="space-y-2">
+                {classes.map((classItem) => (
+                  <button
+                    key={classItem.id}
+                    class={`w-full text-left p-2 rounded-lg leading-tight shadow-sm ${typeClasses[classItem.type]}`}
+                    onClick$={() => (selectedClass.value = classItem)}
+                  >
+                    <div class="text-xs font-semibold mb-1">{classItem.name}</div>
+                    <div class="text-[10px] opacity-90 flex items-center gap-1">
+                      <LuClock class="w-2 h-2" />
+                      {classItem.time}
+                    </div>
+                    <div class="text-[10px] opacity-90 flex items-center gap-1 mt-1">
+                      <LuMapPin class="w-2 h-2" />
+                      {classItem.room}
+                    </div>
+                    {classItem.ageGroup && (
+                      <div class="text-[10px] opacity-90 flex items-center gap-1 mt-1">
+                        <LuUsers class="w-2 h-2" />
+                        {classItem.ageGroup}
+                      </div>
+                    )}
+                    {classItem.level && (
+                      <span class="inline-block mt-1 text-[8px] px-1 py-0.5 rounded bg-white/85 text-black">
+                        {classItem.level}
+                      </span>
+                    )}
+                  </button>
+                ))}
+              </Card.Content>
+            </Card.Root>
+            );
+          })}
+        </div>
+
         {/* Mobile Accordion View */}
-        <div class="lg:hidden space-y-4 max-w-2xl mx-auto">
+        <div class="md:hidden space-y-4 max-w-2xl mx-auto">
           {dayOrder.map((day) => {
             const classes = scheduleData[day] || [];
             const isExpanded = expandedDays.value.has(day);
