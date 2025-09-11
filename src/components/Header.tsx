@@ -26,14 +26,14 @@ export default component$(() => {
   const currentLocale = getLocale();
   const showLanguageDropdown = useSignal<boolean>(false);
   const languageNamesShort: Record<string, string> = {
-      'es': 'ES',
-      'en': 'EN',
-      'it': 'IT',
+    'es': 'ES',
+    'en': 'EN',
+    'it': 'IT',
   };
   const languageNames: Record<string, string> = {
-      'es': 'Español',
-      'en': 'English',
-      'it': 'Italiano',
+    'es': 'Español',
+    'en': 'English',
+    'it': 'Italiano',
   };
 
   return (
@@ -43,16 +43,18 @@ export default component$(() => {
 
       {/* Main header with logo and navigation */}
       <div class="bg-white border-b">
-        <div class="container mx-auto px-2 py-2 flex flex-col items-center">
-          <div class="flex items-center w-full justify-center gap-2 lg:my-4">
-          <Link href="/" class="flex items-center gap-2 md:gap-4">
-            <Logo
+        <div class="container mx-auto px-2 py-2 flex items-center justify-between">
+          <div class="flex items-center gap-2 lg:my-4">
+            <Link href="/" class="flex items-center gap-2 md:gap-4">
+              <Logo
                 alt="Círculo Italiano Miramar Logo"
                 class="rounded-full w-12 h-12 md:w-20 md:h-20 lg:w-24 lg:h-24 transition-all"
               />
-              <div class="block text-center">
+              <div class="block">
                 <p class="text-[11px] md:text-base font-medium leading-none">Mutual Cultural</p>
-                <p class="text-sm md:text-2xl lg:text-3xl font-bold leading-tight whitespace-normal md:whitespace-nowrap max-w-[120px] md:max-w-none">Círculo Italiano Joven Italia</p>
+                <p class="text-sm md:text-2xl lg:text-3xl font-bold leading-tight whitespace-normal md:whitespace-nowrap max-w-[120px] md:max-w-none">
+                  Círculo Italiano Joven Italia
+                </p>
               </div>
             </Link>
             <button class="md:hidden ml-2" aria-label="Menu" onClick$={() => mobileMenuOpen.value = true}>
@@ -61,9 +63,9 @@ export default component$(() => {
               </svg>
             </button>
           </div>
-          
+
           {/* Desktop navigation with language selector */}
-          <div class="hidden md:flex items-center justify-between w-full max-w-4xl">
+          <div class="hidden md:flex items-center gap-4 ml-4">
             <nav class="flex items-center font-bold gap-2">
               {navigation.map((item) =>
                 item.dropdown ? (
@@ -110,43 +112,43 @@ export default component$(() => {
                 ),
               )}
             </nav>
-            
+
             {/* Language selector */}
-            <div class="relative">
+            <div class="relative ml-2">
               <button
-                  onClick$={() => showLanguageDropdown.value = !showLanguageDropdown.value}
-                  class="flex items-center justify-center p-2 text-[#CE2B37] hover:text-[#b52532] bg-white border border-gray-200 rounded-lg transition-colors cursor-pointer"
-                  aria-label={_`Change language`}
+                onClick$={() => showLanguageDropdown.value = !showLanguageDropdown.value}
+                class="flex items-center justify-center p-2 text-[#CE2B37] hover:text-[#b52532] bg-white border border-gray-200 rounded-lg transition-colors cursor-pointer"
+                aria-label={_`Change language`}
               >
-                  <LuLanguages class="w-5 h-5" />
-                  <span class="ml-1 text-sm">{languageNamesShort[currentLocale] || currentLocale}</span>
-                  <LuChevronDown
-                      class={`w-5 h-5 transition-transform duration-200 ${showLanguageDropdown.value ? "rotate-180" : "rotate-0"}`}
-                  />
+                <LuLanguages class="w-5 h-5" />
+                <span class="ml-1 text-sm">{languageNamesShort[currentLocale] || currentLocale}</span>
+                <LuChevronDown
+                  class={`w-5 h-5 transition-transform duration-200 ${showLanguageDropdown.value ? "rotate-180" : "rotate-0"}`}
+                />
               </button>
 
               {showLanguageDropdown.value && (
-                  <div class="absolute right-0 mt-2 py-2 w-48 bg-white rounded-md shadow-lg z-20 animate-fadeIn border border-gray-200">
-                      {locales.map((locale) => (
-                          <a
-                              key={locale}
-                              href={`/${locale}`}
-                              class={`block px-4 py-2 text-sm ${locale === currentLocale ?
-                                  'bg-[#009246]/10 text-[#009246] font-medium' :
-                                  'text-gray-700 hover:bg-gray-100'}`}
-                          >
-                              {languageNames[locale] || locale}
-                              {locale === currentLocale && (
-                                  <span class="ml-2">✓</span>
-                              )}
-                          </a>
-                      ))}
-                  </div>
+                <div class="absolute right-0 mt-2 py-2 w-48 bg-white rounded-md shadow-lg z-20 animate-fadeIn border border-gray-200">
+                  {locales.map((locale) => (
+                    <a
+                      key={locale}
+                      href={`/${locale}`}
+                      class={`block px-4 py-2 text-sm ${locale === currentLocale ?
+                        'bg-[#009246]/10 text-[#009246] font-medium' :
+                        'text-gray-700 hover:bg-gray-100'}`}
+                    >
+                      {languageNames[locale] || locale}
+                      {locale === currentLocale && (
+                        <span class="ml-2">✓</span>
+                      )}
+                    </a>
+                  ))}
+                </div>
               )}
             </div>
           </div>
         </div>
-        
+
         {/* Mobile menu overlay */}
         {mobileMenuOpen.value && (
           <div class="fixed inset-0 z-50 bg-black/40 flex">
@@ -156,7 +158,7 @@ export default component$(() => {
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
-              
+
               {/* Mobile language selector */}
               <div class="mb-4">
                 <span class="block font-bold text-gray-700 mb-2">{_`Change language`}</span>
@@ -174,7 +176,7 @@ export default component$(() => {
                   ))}
                 </div>
               </div>
-              
+
               {navigation.map((item) =>
                 item.dropdown ? (
                   <div key={item.name} class="group">
