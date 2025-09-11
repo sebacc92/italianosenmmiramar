@@ -6,24 +6,24 @@ import { NavLink } from "./NavLink";
 import { LuChevronDown, LuLanguages } from '@qwikest/icons/lucide';
 
 export default component$(() => {
+  const currentLocale = getLocale();
   const navigation = [
-    { name: _`Inicio`, href: "/" },
-    { name: _`Nosotros`, href: "/nosotros/" },
-    { name: _`Eventos`, href: "/eventos/" },
-    { name: _`Servicios`, href: "/servicios/" },
+    { name: _`Inicio`, href: `/${currentLocale}` },
+    { name: _`Nosotros`, href: `/${currentLocale}/nosotros` },
+    { name: _`Eventos`, href: `/${currentLocale}/eventos` },
+    { name: _`Servicios`, href: `/${currentLocale}/servicios` },
     {
       name: _`Idiomas`,
       href: "#",
       dropdown: true,
       items: [
-        { name: _`Clases de Italiano`, href: "/clases/italiano/" },
-        { name: _`Clases de Inglés`, href: "/clases/ingles/" },
+        { name: _`Clases de Italiano`, href: `/${currentLocale}/clases/italiano` },
+        { name: _`Clases de Inglés`, href: `/${currentLocale}/clases/ingles` },
       ],
     },
-    { name: _`Contáctanos`, href: "/contacto/" },
+    { name: _`Contáctanos`, href: `/${currentLocale}/contacto` },
   ]
   const mobileMenuOpen = useSignal(false);
-  const currentLocale = getLocale();
   const showLanguageDropdown = useSignal<boolean>(false);
   const languageNamesShort: Record<string, string> = {
     'es': 'ES',
@@ -45,7 +45,7 @@ export default component$(() => {
       <div class="bg-white border-b">
         <div class="container mx-auto px-2 py-2 flex items-center justify-between">
           <div class="flex items-center gap-2 lg:my-4">
-            <Link href="/" class="flex items-center gap-2 md:gap-4">
+            <Link href={`/${currentLocale}`} class="flex items-center gap-2 md:gap-4">
               <Logo
                 alt="Círculo Italiano Miramar Logo"
                 class="rounded-full w-12 h-12 md:w-20 md:h-20 lg:w-24 lg:h-24 transition-all"
@@ -133,7 +133,7 @@ export default component$(() => {
                   {locales.map((locale) => (
                     <a
                       key={locale}
-                      href={`/${locale}`}
+                      href={`/${locale}${currentLocale === locale ? '' : `/${locale}`}`}
                       class={`block px-4 py-2 text-sm ${locale === currentLocale ?
                         'bg-[#009246]/10 text-[#009246] font-medium' :
                         'text-gray-700 hover:bg-gray-100'}`}

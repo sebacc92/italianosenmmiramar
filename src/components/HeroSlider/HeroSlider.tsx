@@ -1,190 +1,83 @@
-import { component$, useSignal, useVisibleTask$, $, useStylesScoped$ } from "@builder.io/qwik";
+import { component$ } from "@builder.io/qwik";
 import { Link } from "@builder.io/qwik-city";
-import styles from "./hero-slider.css?inline";
-import { _ } from "compiled-i18n";
-import Slide1 from '~/media/slides/slide1.jpg?jsx';
-import Slide2 from '~/media/slides/slide2.jpg?jsx';
-import Slide3 from '~/media/slides/slide3.jpg?jsx';
-import Slide4 from '~/media/slides/slide4.jpg?jsx';
-import Slide5 from '~/media/slides/slide5.jpg?jsx';
-import Slide6 from '~/media/slides/slide6.jpg?jsx';
-
-// Type definition for slides
-interface Slide {
-    id: number;
-    title: string;
-    description: string;
-    image: any; // Cambiado a any para componentes
-    ctaLink: string;
-    ctaText: string;
-}
-
-// Slides con imágenes locales optimizadas
-const slides: Slide[] = [
-    {
-        id: 1,
-        title: "Bienvenidos al Círculo Italiano",
-        description: "Acompañando a la ciudad de Miramar hace 136 años con cultura, tradición y comunidad.",
-        image: Slide1,
-        ctaLink: "/historia",
-        ctaText: "Conocer nuestra historia",
-    },
-    {
-        id: 2,
-        title: "Clases de Italiano",
-        description: "Aprende el idioma de Dante con profesores nativos y certificación internacional.",
-        image: Slide2,
-        ctaLink: "/clases/italiano",
-        ctaText: "Ver cursos disponibles",
-    },
-    {
-        id: 3,
-        title: "Eventos Culturales",
-        description: "Descubre nuestro calendario de eventos, exposiciones, charlas y actividades.",
-        image: Slide3,
-        ctaLink: "/eventos",
-        ctaText: "Ver próximos eventos",
-    },
-    {
-        id: 4,
-        title: "Trámites de Ciudadanía Italiana",
-        description: "Te asesoramos y acompañamos en el proceso para obtener tu ciudadanía italiana.",
-        image: Slide4,
-        ctaLink: "/tramites",
-        ctaText: "Ver asesoría",
-    },
-    {
-        id: 5,
-        title: "Alquiler de Salones",
-        description: "Espacios ideales para eventos sociales, culturales y educativos en Miramar.",
-        image: Slide5,
-        ctaLink: "/alquiler-salones",
-        ctaText: "Consultar disponibilidad",
-    },
-    {
-        id: 6,
-        title: "Sumate como Socio",
-        description: "Formá parte de nuestra comunidad y accedé a beneficios exclusivos.",
-        image: Slide6,
-        ctaLink: "/contacto",
-        ctaText: "Hazte socio",
-    },
-];
-
-const TimeOUT = 10000; // 6 seconds
+import { _, getLocale } from "compiled-i18n";
 
 export default component$(() => {
-    useStylesScoped$(styles);
-
-    const currentSlide = useSignal(0);
-    const totalSlides = slides.length;
-
-    // Auto slide functionality
-    // eslint-disable-next-line qwik/no-use-visible-task
-    useVisibleTask$(({ cleanup }) => {
-        const interval = setInterval(() => {
-            currentSlide.value = (currentSlide.value + 1) % totalSlides;
-        }, TimeOUT); // Change slide every 6 seconds
-
-        // Cleanup on unmount
-        cleanup(() => clearInterval(interval));
-    });
-
-    // Navigation handlers
-    const nextSlide = $(() => {
-        currentSlide.value = (currentSlide.value + 1) % totalSlides;
-    });
-
-    const prevSlide = $(() => {
-        currentSlide.value = (currentSlide.value - 1 + totalSlides) % totalSlides;
-    });
-
-    const goToSlide = $((index: number) => {
-        currentSlide.value = index;
-    });
-
+    const currentLocale = getLocale();
     return (
-        <div class="slider-container w-full h-[500px] md:h-[600px] relative">
-            {slides.map((slide, index) => (
-                <div
-                    key={slide.id}
-                    class={`slide ${index === currentSlide.value ? "active" : ""}`}
-                >
-                    <slide.image alt={slide.title} class="slide-image" />
-                    <div class="absolute inset-0 bg-black/40"></div>
-                    <div class="slide-content px-4 md:px-12 lg:container mx-auto">
-                        <div class="max-w-lg bg-black/70 p-6 md:p-8 rounded-lg shadow-lg backdrop-blur-sm">
-                            <h2 class="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-3 drop-shadow-lg">
-                                {slide.title}
-                            </h2>
-                            <p class="text-base md:text-lg text-white/95 mb-6 drop-shadow">
-                                {slide.description}
-                            </p>
-                            <Link
-                                href={slide.ctaLink}
-                                class="inline-block px-6 py-3 bg-[#CE2B37] hover:bg-[#b52532] text-white text-sm md:text-base font-medium rounded-md transition-colors shadow-md"
-                            >
-                                {slide.ctaText}
-                            </Link>
+        <section class="relative w-full min-h-[calc(100dvh-120px)] md:min-h-[calc(100dvh-160px)] flex items-center justify-center">
+            {/* Background image */}
+            <img 
+                src="/images/exterior_institucion.jpg" 
+                alt="Sede del Círculo Italiano" 
+                class="absolute inset-0 h-full w-full object-cover"
+            />
+            
+            {/* Gradient overlay for better text readability */}
+            <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-black/50 to-black/60"></div>
+
+            {/* Content - Centered vertically and horizontally */}
+            <div class="relative z-10 w-full px-4 md:px-8 lg:px-12">
+                <div class="container mx-auto">
+                    <div class="flex justify-center md:justify-start">
+                        <div class="text-center md:text-left max-w-5xl">
+                            {/* Card with glassmorphism effect */}
+                            <div class="bg-black/25 backdrop-blur-sm border border-white/20 p-8 md:p-10 lg:p-12 rounded-2xl shadow-2xl">
+                                {/* Italian flag accent */}
+                                <div class="flex gap-2 justify-center md:justify-start mb-6">
+                                    <div class="flex">
+                                        <span class="w-4 h-6 bg-[#009246] rounded-l"></span>
+                                        <span class="w-4 h-6 bg-white"></span>
+                                        <span class="w-4 h-6 bg-[#CE2B37] rounded-r"></span>
+                                    </div>
+                                    <div class="flex">
+                                        <span class="w-4 h-6 bg-[#6EC6F1] rounded-l"></span>
+                                        <span class="w-4 h-6 bg-white"></span>
+                                        <span class="w-4 h-6 bg-[#6EC6F1] rounded-r"></span>
+                                    </div>
+                                </div>
+                                
+                                <h1 class="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-4 leading-tight">
+                                    {_`Bienvenidos al Círculo Italiano`}
+                                </h1>
+                                
+                                <p class="text-white/90 text-base sm:text-lg lg:text-xl mb-8 leading-relaxed">
+                                    {_`Acompañando a la ciudad de Miramar hace 136 años con cultura, tradición y comunidad.`}
+                                </p>
+                                
+                                <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+                                    <Link 
+                                        href={`/${currentLocale}/nosotros`} 
+                                        class="group relative px-6 py-3.5 bg-[#CE2B37] hover:bg-[#b52532] text-white rounded-lg text-sm md:text-base font-medium shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 overflow-hidden"
+                                    >
+                                        <span class="relative z-10">{_`Conocer nuestra historia`}</span>
+                                        <div class="absolute inset-0 bg-gradient-to-r from-[#b52532] to-[#CE2B37] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                    </Link>
+                                    
+                                    <Link 
+                                        href={`/${currentLocale}/eventos`} 
+                                        class="group px-6 py-3.5 bg-white/95 hover:bg-white text-gray-900 rounded-lg text-sm md:text-base font-medium shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 border border-white/50"
+                                    >
+                                        <span class="flex items-center gap-2">
+                                            {_`Ver próximos eventos`}
+                                            <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                            </svg>
+                                        </span>
+                                    </Link>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            ))}
-
-            {/* Navigation buttons */}
-            <button
-                onClick$={prevSlide}
-                class="nav-button prev"
-                aria-label={_`Previous slide`}
-            >
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-8 w-8 text-white"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                >
-                    <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M15 19l-7-7 7-7"
-                    />
-                </svg>
-            </button>
-            <button
-                onClick$={nextSlide}
-                class="nav-button next"
-                aria-label={_`Next slide`}
-            >
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-8 w-8 text-white"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                >
-                    <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M9 5l7 7-7 7"
-                    />
-                </svg>
-            </button>
-
-            {/* Slide indicators */}
-            <div class="indicators">
-                {slides.map((__, index) => (
-                    <button
-                        key={index}
-                        onClick$={() => goToSlide(index)}
-                        class={`indicator border-2 border-white/70 ${index === currentSlide.value ? "active" : "bg-white/30"
-                            }`}
-                        aria-label={_`Go to slide ${index + 1}`}
-                    ></button>
-                ))}
             </div>
-        </div>
+
+            {/* Subtle scroll indicator */}
+            <div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce hidden md:block">
+                <svg class="w-6 h-6 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                </svg>
+            </div>
+        </section>
     );
 });
