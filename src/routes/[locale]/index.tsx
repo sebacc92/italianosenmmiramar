@@ -10,6 +10,7 @@ import EventoMalvinasImg from '~/media/eventos2.png?jsx';
 import MuseoRodanteImg from '~/media/museo-rodante.webp?jsx';
 import EventoVideoconferenciaImg from '~/media/videoconferencia1.jpeg?jsx';
 import EventoAntilefIuraImg from '~/media/eventos3.webp?jsx';
+import EventoAsambleaImg from '~/media/asamblea-anual.png?jsx';
 
 const eventos = [
     {
@@ -82,6 +83,15 @@ const eventos = [
         imageComponent: EventoAntilefIuraImg,
         description: "Exposición de arte y música en la Mutual Cultural Círculo Italiano Joven Italia. Obras de Antilef Iura y acompañamiento musical. ¡No te lo pierdas!",
         location: "Mutual Cultural Círculo Italiano Joven Italia, Miramar",
+    },
+    {
+        id: "asamblea-anual-2025",
+        title: "Asamblea Anual Ordinaria 2025",
+        date: "Viernes 7 de Noviembre - 20:00hs",
+        imageComponent: EventoAsambleaImg,
+        description:
+            "Tenemos el agrado de invitarlos a participar de la Asamblea Anual Ordinaria de la Mutual Cultural Círculo Italiano Joven Italia, que se realizará el viernes 7 de noviembre de 2025 a las 20:00 hs., en nuestra sede de calle 24 Nº 1214, Miramar. Adjuntamos la convocatoria oficial con el Orden del Día. La participación de todos es muy importante para seguir fortaleciendo nuestra institución.",
+        location: "Mutual Cultural Círculo Italiano Joven Italia, Calle 24 Nº 1214, Miramar",
     },
 ];
 

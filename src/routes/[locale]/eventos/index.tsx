@@ -3,12 +3,13 @@ import type { DocumentHead } from "@builder.io/qwik-city";
 import { Link } from "@builder.io/qwik-city";
 import { LuCalendar, LuClock, LuMapPin } from "@qwikest/icons/lucide";
 import { Button } from "~/components/ui/button/button";
-import { _ } from "compiled-i18n";
+import { _, getLocale } from "compiled-i18n";
 import EventoAniversarioImg from '~/media/eventos1.png?jsx';
 import EventoMalvinasImg from '~/media/eventos2.png?jsx';
 import MuseoRodanteImg from '~/media/museo-rodante.webp?jsx';
 import EventoVideoconferenciaImg from '~/media/videoconferencia1.jpeg?jsx';
 import EventoAntilefIuraImg from '~/media/eventos3.webp?jsx';
+import EventoAsambleaImg from '~/media/asamblea-anual.png?jsx';
 
 const eventos = [
     {
@@ -83,6 +84,15 @@ const eventos = [
         description: "Exposición de arte y música en la Mutual Cultural Círculo Italiano Joven Italia. Obras de Antilef Iura y acompañamiento musical. ¡No te lo pierdas!",
         location: "Mutual Cultural Círculo Italiano Joven Italia, Miramar",
     },
+    {
+        id: "asamblea-anual-2025",
+        title: "Asamblea Anual Ordinaria 2025",
+        date: "Viernes 7 de Noviembre - 20:00hs",
+        imageComponent: EventoAsambleaImg,
+        description:
+            "Tenemos el agrado de invitarlos a participar de la Asamblea Anual Ordinaria de la Mutual Cultural Círculo Italiano Joven Italia, que se realizará el viernes 7 de noviembre de 2025 a las 20:00 hs., en nuestra sede de calle 24 Nº 1214, Miramar. Adjuntamos la convocatoria oficial con el Orden del Día. La participación de todos es muy importante para seguir fortaleciendo nuestra institución.",
+        location: "Mutual Cultural Círculo Italiano Joven Italia, Calle 24 Nº 1214, Miramar",
+    },
 ];
 
 // Utilidad para parsear fechas en formato "Día de la semana D de Mes - HShs" o "Lunes 17 de Marzo"
@@ -134,6 +144,7 @@ const eventosPasados = eventosOrdenados.filter(e => {
 });
 
 export default component$(() => {
+    const currentLocale = getLocale();
     return (
         <div class="flex min-h-screen flex-col">
             <main class="flex-1">
@@ -161,9 +172,9 @@ export default component$(() => {
                                 <div key={evento.id} class="border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
                                     <div class="relative h-64 flex items-center justify-center bg-gray-100">
                                         {evento.imageComponent ? (
-                                            <evento.imageComponent style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                            <evento.imageComponent style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top' }} />
                                         ) : (
-                                            <img src={evento.image} alt={evento.title} class="w-full h-full object-cover" />
+                                            <img src={evento.image} alt={evento.title} class="w-full h-full object-cover object-top" />
                                         )}
                                     </div>
                                     <div class="p-6 border-b">
@@ -182,7 +193,7 @@ export default component$(() => {
                                     </div>
                                     <div class="p-6 pt-0">
                                         <Button look="primary" class="bg-green-600 hover:bg-green-700">
-                                            <Link href={`/eventos/${evento.id}`}>{_`Más información`}</Link>
+                                            <Link href={`/${currentLocale}/eventos/${evento.id}`}>{_`Más información`}</Link>
                                         </Button>
                                     </div>
                                 </div>
@@ -203,9 +214,9 @@ export default component$(() => {
                                 <div key={evento.id} class="border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow opacity-70">
                                     <div class="relative h-64 flex items-center justify-center bg-gray-100">
                                         {evento.imageComponent ? (
-                                            <evento.imageComponent style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                            <evento.imageComponent style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top' }} />
                                         ) : (
-                                            <img src={evento.image} alt={evento.title} class="w-full h-full object-cover" />
+                                            <img src={evento.image} alt={evento.title} class="w-full h-full object-cover object-top" />
                                         )}
                                     </div>
                                     <div class="p-6 border-b">
@@ -277,7 +288,7 @@ export default component$(() => {
                                                 </div>
                                             </div>
                                             <Button look="outline" size="sm">
-                                                <Link href={`/eventos/${evento.id}`}>{_`Ver`}</Link>
+                                                <Link href={`/${currentLocale}/eventos/${evento.id}`}>{_`Ver`}</Link>
                                             </Button>
                                         </div>
                                     ))}
@@ -295,7 +306,7 @@ export default component$(() => {
                             {_`Acércanos tu propuesta. Estamos abiertos a colaboraciones y nuevas iniciativas culturales.`}
                         </p>
                         <Button look="outline" size="lg" class="bg-white text-green-600 hover:bg-white/90">
-                            <Link href="/contacto?asunto=proyecto">{_`Presentar proyecto`}</Link>
+                            <Link href={`/${currentLocale}/contacto?asunto=proyecto`}>{_`Presentar proyecto`}</Link>
                         </Button>
                     </div>
                 </section>

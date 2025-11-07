@@ -1,13 +1,14 @@
 import { component$ } from "@builder.io/qwik";
 import { useLocation, Link } from "@builder.io/qwik-city";
-import { LuCalendar, LuMapPin } from "@qwikest/icons/lucide";
+import { LuCalendar, LuMapPin, LuArrowLeft } from "@qwikest/icons/lucide";
 import { Button } from "~/components/ui/button/button";
-import EventoAniversarioImg from '~/media/eventos1.png?jsx';
-import EventoMalvinasImg from '~/media/eventos2.png?jsx';
-import MuseoRodanteImg from '~/media/museo-rodante.webp?jsx';
-import EventoVideoconferenciaImg from '~/media/videoconferencia1.jpeg?jsx';
-import EventoAntilefIuraImg from '~/media/eventos3.webp?jsx';
-import { _ } from "compiled-i18n";
+import EventoAniversarioImg from '~/media/eventos1.png?w=1200&jsx';
+import EventoMalvinasImg from '~/media/eventos2.png?w=1200&jsx';
+import MuseoRodanteImg from '~/media/museo-rodante.webp?w=1200&jsx';
+import EventoVideoconferenciaImg from '~/media/videoconferencia1.jpeg?w=1200&jsx';
+import EventoAntilefIuraImg from '~/media/eventos3.webp?w=1200&jsx';
+import EventoAsambleaImg from '~/media/asamblea-anual.png?w=1200&jsx';
+import { _, getLocale } from "compiled-i18n";
 
 const eventos = [
   {
@@ -82,48 +83,109 @@ const eventos = [
     description: "Exposición de arte y música en la Mutual Cultural Círculo Italiano Joven Italia. Obras de Antilef Iura y acompañamiento musical. ¡No te lo pierdas!",
     location: "Mutual Cultural Círculo Italiano Joven Italia, Miramar",
   },
+  {
+    id: "asamblea-anual-2025",
+    title: "Asamblea Anual Ordinaria 2025",
+    date: "Viernes 7 de Noviembre - 20:00hs",
+    imageComponent: EventoAsambleaImg,
+    description:
+      "Tenemos el agrado de invitarlos a participar de la Asamblea Anual Ordinaria de la Mutual Cultural Círculo Italiano Joven Italia, que se realizará el viernes 7 de noviembre de 2025 a las 20:00 hs., en nuestra sede de calle 24 Nº 1214, Miramar. Adjuntamos la convocatoria oficial con el Orden del Día. La participación de todos es muy importante para seguir fortaleciendo nuestra institución.",
+    location: "Mutual Cultural Círculo Italiano Joven Italia, Calle 24 Nº 1214, Miramar",
+  },
 ];
 
 export default component$(() => {
   const loc = useLocation();
   const slug = loc.params.slug;
+  const currentLocale = getLocale();
   const evento = eventos.find((e) => e.id === slug);
 
   if (!evento) {
     return (
       <div class="container mx-auto px-4 py-16 text-center">
         <h1 class="text-2xl font-bold mb-4">{_`Evento no encontrado`}</h1>
-        <Link href="/eventos" class="text-red-600 underline">{_`Volver a eventos`}</Link>
+        <Link href={`/${currentLocale}/eventos`} class="text-red-600 underline">{_`Volver a eventos`}</Link>
       </div>
     );
   }
 
   return (
-    <section class="py-12 bg-white min-h-screen">
-      <div class="container mx-auto px-4 max-w-3xl">
-        <div class="mb-8">
-          <Link href="/eventos" class="text-red-600 hover:underline text-sm">← {_`Volver a eventos`}</Link>
+    <section class="py-8 md:py-16 bg-gray-50 min-h-screen">
+      <div class="container mx-auto px-4 max-w-6xl">
+        {/* Botón volver */}
+        <div class="mb-6">
+          <Link 
+            href={`/${currentLocale}/eventos`} 
+            class="inline-flex items-center gap-2 text-green-600 hover:text-green-700 font-medium transition-colors group"
+          >
+            <LuArrowLeft class="h-4 w-4 transition-transform group-hover:-translate-x-1" />
+            <span>{_`Volver a eventos`}</span>
+          </Link>
         </div>
-        {evento.imageComponent ? (
-          <div class="w-full flex justify-center items-center bg-gray-100 rounded-xl mb-8" style={{ minHeight: '320px', maxHeight: '480px', height: 'auto' }}>
-            <evento.imageComponent style={{ maxWidth: '100%', maxHeight: '480px', width: 'auto', height: 'auto', objectFit: 'contain', borderRadius: '1rem' }} />
+
+        {/* Contenedor principal con fondo blanco y sombra */}
+        <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+          {/* Imagen del evento */}
+          <div class="w-full mb-8 md:mb-12">
+            {evento.imageComponent ? (
+              <div class="w-full flex justify-center items-center p-4 md:p-8">
+                <evento.imageComponent 
+                  class="max-w-full h-auto rounded-xl shadow-xl"
+                  alt={evento.title}
+                />
+              </div>
+            ) : (
+              <div class="w-full flex justify-center items-center p-4 md:p-8">
+                <img 
+                  src={evento.image} 
+                  alt={evento.title} 
+                  class="max-w-full h-auto rounded-xl shadow-xl"
+                  loading="lazy"
+                />
+              </div>
+            )}
           </div>
-        ) : (
-          <div class="w-full flex justify-center items-center bg-gray-100 rounded-xl mb-8" style={{ minHeight: '320px', maxHeight: '480px', height: 'auto' }}>
-            <img src={evento.image} alt={evento.title} style={{ maxWidth: '100%', maxHeight: '480px', width: 'auto', height: 'auto', objectFit: 'contain', borderRadius: '1rem' }} />
+
+          {/* Contenido del evento */}
+          <div class="px-6 md:px-12 pb-8 md:pb-12">
+            {/* Título */}
+            <h1 class="text-3xl md:text-5xl font-bold mb-6 text-gray-900 leading-tight">
+              {evento.title}
+            </h1>
+
+            {/* Información del evento */}
+            <div class="flex flex-col md:flex-row md:items-center gap-4 md:gap-8 mb-8 pb-6 border-b border-gray-200">
+              <div class="flex items-center gap-2 text-gray-700">
+                <div class="flex items-center justify-center w-10 h-10 rounded-full bg-green-100 text-green-600">
+                  <LuCalendar class="h-5 w-5" />
+                </div>
+                <span class="text-base md:text-lg font-medium">{evento.date}</span>
+              </div>
+              <div class="flex items-center gap-2 text-gray-700">
+                <div class="flex items-center justify-center w-10 h-10 rounded-full bg-red-100 text-red-600">
+                  <LuMapPin class="h-5 w-5" />
+                </div>
+                <span class="text-base md:text-lg font-medium">{evento.location}</span>
+              </div>
+            </div>
+
+            {/* Descripción */}
+            <div class="mb-8">
+              <p class="text-gray-700 text-lg md:text-xl leading-relaxed whitespace-pre-line">
+                {evento.description}
+              </p>
+            </div>
+
+            {/* Botón de acción */}
+            <div class="pt-4">
+              <Link href={`/${currentLocale}/contacto`}>
+                <Button class="bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all border-2 border-green-700 px-8 py-3 text-lg">
+                  {_`Consultar`}
+                </Button>
+              </Link>
+            </div>
           </div>
-        )}
-        <h1 class="text-3xl md:text-4xl font-bold mb-4">{evento.title}</h1>
-        <div class="flex flex-wrap gap-6 text-gray-600 mb-6 text-lg">
-          <span class="flex items-center gap-2"><LuCalendar class="h-5 w-5" /> {evento.date}</span>
-          <span class="flex items-center gap-2"><LuMapPin class="h-5 w-5" /> {evento.location}</span>
         </div>
-        <p class="text-gray-700 text-lg mb-8">{evento.description}</p>
-        <Link href="/contacto">
-          <Button class="bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-md border-2 border-green-700 px-8 py-2">
-            Consultar
-          </Button>
-        </Link>
       </div>
     </section>
   );

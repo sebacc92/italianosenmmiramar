@@ -1,4 +1,4 @@
-import { component$, useSignal, $, useTask$ } from "@builder.io/qwik";
+import { component$, useSignal, $ } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
 import { LuClock, LuMapPin, LuUsers, LuArrowDown, LuMusic, LuHeart, LuInstagram, LuPhone, LuMail, LuAward, LuSparkles, LuShield } from "@qwikest/icons/lucide";
 import { Card } from "~/components/ui/card/card";
