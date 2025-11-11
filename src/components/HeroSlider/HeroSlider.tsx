@@ -2,7 +2,7 @@ import { component$ } from "@builder.io/qwik";
 import { Link } from "@builder.io/qwik-city";
 import { _, getLocale } from "compiled-i18n";
 
-export default component$(() => {
+export default component$(({ title, description }: { title: string, description: string }) => {
     const currentLocale = getLocale();
     return (
         <section class="relative w-full min-h-[calc(100dvh-120px)] md:min-h-[calc(100dvh-160px)] flex items-center justify-center">
@@ -38,11 +38,11 @@ export default component$(() => {
                                 </div>
                                 
                                 <h1 class="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-4 leading-tight">
-                                    {_`Bienvenidos al Círculo Italiano`}
+                                    {title}
                                 </h1>
                                 
                                 <p class="text-white/90 text-base sm:text-lg lg:text-xl mb-8 leading-relaxed">
-                                    {_`Acompañando a la ciudad de Miramar hace 136 años con cultura, tradición y comunidad.`}
+                                    {description}
                                 </p>
                                 
                                 <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">

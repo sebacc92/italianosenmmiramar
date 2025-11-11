@@ -1,104 +1,265 @@
-import { component$ } from "@builder.io/qwik";
-import { useLocation, Link } from "@builder.io/qwik-city";
+import { component$, useSignal, $, useVisibleTask$ } from "@builder.io/qwik";
+import { useLocation, Link, type DocumentHead, routeAction$, routeLoader$ } from "@builder.io/qwik-city";
 import { LuCalendar, LuMapPin, LuArrowLeft } from "@qwikest/icons/lucide";
-import { Button } from "~/components/ui/button/button";
-import EventoAniversarioImg from '~/media/eventos1.png?w=1200&jsx';
-import EventoMalvinasImg from '~/media/eventos2.png?w=1200&jsx';
-import MuseoRodanteImg from '~/media/museo-rodante.webp?w=1200&jsx';
-import EventoVideoconferenciaImg from '~/media/videoconferencia1.jpeg?w=1200&jsx';
-import EventoAntilefIuraImg from '~/media/eventos3.webp?w=1200&jsx';
-import EventoAsambleaImg from '~/media/asamblea-anual.png?w=1200&jsx';
+import { Modal } from "~/components/ui";
+import EventoConsultaForm from "~/components/EventoConsultaForm";
 import { _, getLocale } from "compiled-i18n";
+import qs from 'qs';
 
-const eventos = [
-  {
-    id: "aniversario-136",
-    title: "136° Aniversario - Cena, baile y algo más!",
-    date: "Sábado 10 de Mayo - 21:30hs",
-    imageComponent: EventoMalvinasImg,
-    description:
-      "¡Celebramos nuestros inicios! Cena, baile y algo más. Anticipadas hasta el 8/05: Socios $23.000, No socios $27.000. Entrada general desde el 9/05: $32.000.",
-    location: "Mutual Cultural Círculo Italiano Joven Italia, Miramar",
-  },
-  {
-    id: "peones-malvinas",
-    title: "Peones de Malvinas - Anhelando verte otra vez",
-    date: "Martes 6 de Mayo - 10hs y 15:30hs",
-    imageComponent: EventoAniversarioImg,
-    description:
-      "Obra de la Escuela de danza Ritmos en Acción. La historia de una madre que extraña a su hijo, de un hijo que necesita a su mamá, de un pueblo que llora y sueña libertad. Entrada general: $4.000. Valor especial escuelas: $2.000. Reservas por WhatsApp: 223 4219060.",
-    location: "Mutual Cultural Círculo Italiano Joven Italia, Miramar",
-  },
-  {
-    id: "bienal-arte-2025",
-    title: "Bienal de Arte 2025",
-    date: "Sábado 5 de Abril - 19hs",
-    image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-cP9qd0B8BbVFb6VnIrSYDYaeOtYGVw.png",
-    description:
-      "Muestra de arte pequeño formato. Destacándose la presentación de una obra de Raquel Forner, proveniente del Museo Pcial. de Bellas Artes, Emilio Pettoruti.",
-    location: "Mutual Cultural Círculo Italiano, Calle 24 n1214",
-  },
-  {
-    id: "cena-bienal-2025",
-    title: "Cena Bienal 2025",
-    date: "Jueves 10 de Abril - 21hs",
-    image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-d9PNSvU4MNqCngV983dWaJ93rqNoK3.png",
-    description:
-      "Menú: Bruschette, lasagne, fragole con panna montata, bebidas. Precios: Socios $20.000, No socios $25.000. Anticipadas hasta martes 8/04 $18.000 socios y $23.000 no socios.",
-    location: "Mutual Cultural Círculo Italiano, Calle 24 n1214",
-  },
-  {
-    id: "charla-museo-rodante",
-    title: "Charla: Un Museo Rodante",
-    date: "Jueves 11 de Abril - 17:30hs",
-    image: "/images/placeholder-evento.jpg",
-    imageComponent: MuseoRodanteImg,
-    description:
-      "Importante charla a cargo de Federico Rovituso: 'Un Museo Rodante' con colecciones e historias del Museo Provincial de Bellas Artes Emilio Pettoruti.",
-    location: "Mutual Cultural Círculo Italiano, Calle 24 n1214",
-  },
-  {
-    id: "inicio-clases-italiano",
-    title: "Inicio Clases de Italiano",
-    date: "Lunes 17 de Marzo",
-    image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-1RsMvba8MpkNeAZHIRkhdrxBiRwPSj.png",
-    description:
-      "Arranca el ciclo lectivo 2025 de clases de Italiano, con sus diferentes niveles y propuestas para todas las edades. Inscripciones abiertas hasta el 4 de abril.",
-    location: "Mutual Cultural Círculo Italiano, Calle 24 n1214",
-  },
-  {
-    id: "videoconferencia-renacimiento-italia",
-    title: "El Renacimiento en Italia: cultura y sociedad",
-    date: "Viernes 25 de Abril - 17:30hs",
-    imageComponent: EventoVideoconferenciaImg,
-    description:
-      "Videoconferencia a cargo de Eduardo Crivelli Minutti. El Renacimiento en Italia fue un periodo de transformación cultural que marcó el paso de la Edad Media a la modernidad, recuperando la herencia clásica y promoviendo el humanismo. Ciudades como Florencia, Venecia y Roma se destacaron por su innovación artística y cambios sociales, políticos y económicos que influyeron en el pensamiento moderno.",
-    location: "Via Zoom y presencial en Mutual Cultural Italiana, calle 24 n1214",
-  },
-  {
-    id: "antilef-iura-expo-2025",
-    title: "Exposición Antilef Iura + Música",
-    date: "Sábado 26 de Abril - 18hs",
-    imageComponent: EventoAntilefIuraImg,
-    description: "Exposición de arte y música en la Mutual Cultural Círculo Italiano Joven Italia. Obras de Antilef Iura y acompañamiento musical. ¡No te lo pierdas!",
-    location: "Mutual Cultural Círculo Italiano Joven Italia, Miramar",
-  },
-  {
-    id: "asamblea-anual-2025",
-    title: "Asamblea Anual Ordinaria 2025",
-    date: "Viernes 7 de Noviembre - 20:00hs",
-    imageComponent: EventoAsambleaImg,
-    description:
-      "Tenemos el agrado de invitarlos a participar de la Asamblea Anual Ordinaria de la Mutual Cultural Círculo Italiano Joven Italia, que se realizará el viernes 7 de noviembre de 2025 a las 20:00 hs., en nuestra sede de calle 24 Nº 1214, Miramar. Adjuntamos la convocatoria oficial con el Orden del Día. La participación de todos es muy importante para seguir fortaleciendo nuestra institución.",
-    location: "Mutual Cultural Círculo Italiano Joven Italia, Calle 24 Nº 1214, Miramar",
-  },
-];
+const BASE_URL = import.meta.env.VITE_STRAPI_URL;
+
+// Tipo para evento de Strapi
+interface StrapiEvento {
+    id: number;
+    documentId: string;
+    titulo: string;
+    fecha: string;
+    lugar: string;
+    destacado: boolean;
+    description: string;
+    imagen_principal: {
+        url: string;
+        formats?: {
+            thumbnail?: { url: string; width?: number; height?: number };
+            small?: { url: string; width?: number; height?: number };
+            medium?: { url: string; width?: number; height?: number };
+            large?: { url: string; width?: number; height?: number };
+        };
+        width?: number;
+        height?: number;
+        alternativeText?: string | null;
+    } | null;
+    galeria?: Array<{
+        url: string;
+        formats?: {
+            thumbnail?: { url: string; width?: number; height?: number };
+            small?: { url: string; width?: number; height?: number };
+            medium?: { url: string; width?: number; height?: number };
+            large?: { url: string; width?: number; height?: number };
+        };
+    }> | null;
+}
+
+// Función para formatear fecha en español
+function formatDate(fechaISO: string): string {
+    const fecha = new Date(fechaISO);
+    const diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+    const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 
+                   'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+    
+    const diaSemana = diasSemana[fecha.getDay()];
+    const dia = fecha.getDate();
+    const mes = meses[fecha.getMonth()];
+    const hora = fecha.getHours();
+    const minutos = fecha.getMinutes();
+    
+    let dateStr = `${diaSemana} ${dia} de ${mes}`;
+    if (hora > 0 || minutos > 0) {
+        const horaStr = hora.toString().padStart(2, '0');
+        const minutosStr = minutos.toString().padStart(2, '0');
+        dateStr += ` - ${horaStr}:${minutosStr}hs`;
+    }
+    
+    return dateStr;
+}
+
+// Función para obtener URL de imagen optimizada de Strapi
+function getStrapiImageUrl(imagen: StrapiEvento['imagen_principal'], size: 'thumbnail' | 'small' | 'medium' | 'large' | 'original' = 'large'): string | null {
+    if (!imagen) return null;
+    
+    const baseUrl = BASE_URL.replace(/\/$/, '');
+    const imageUrl = imagen.url.startsWith('http') ? imagen.url : `${baseUrl}${imagen.url}`;
+    
+    if (size !== 'original' && imagen.formats && imagen.formats[size]) {
+        const format = imagen.formats[size];
+        if (format) {
+            const formatUrl = format.url;
+            return formatUrl.startsWith('http') ? formatUrl : `${baseUrl}${formatUrl}`;
+        }
+    }
+    
+    return imageUrl;
+}
+
+// Función para generar srcset para imágenes responsivas
+function getStrapiImageSrcSet(imagen: StrapiEvento['imagen_principal']): string | null {
+    if (!imagen || !imagen.formats) return null;
+    
+    const baseUrl = BASE_URL.replace(/\/$/, '');
+    const srcset: string[] = [];
+    
+    if (imagen.formats.thumbnail) {
+        const thumbnail = imagen.formats.thumbnail;
+        const url = thumbnail.url.startsWith('http') ? thumbnail.url : `${baseUrl}${thumbnail.url}`;
+        const width = thumbnail.width || 156;
+        srcset.push(`${url} ${width}w`);
+    }
+    if (imagen.formats.small) {
+        const small = imagen.formats.small;
+        const url = small.url.startsWith('http') ? small.url : `${baseUrl}${small.url}`;
+        const width = small.width || 500;
+        srcset.push(`${url} ${width}w`);
+    }
+    if (imagen.formats.medium) {
+        const medium = imagen.formats.medium;
+        const url = medium.url.startsWith('http') ? medium.url : `${baseUrl}${medium.url}`;
+        const width = medium.width || 750;
+        srcset.push(`${url} ${width}w`);
+    }
+    if (imagen.formats.large) {
+        const large = imagen.formats.large;
+        const url = large.url.startsWith('http') ? large.url : `${baseUrl}${large.url}`;
+        const width = large.width || 1000;
+        srcset.push(`${url} ${width}w`);
+    }
+    
+    const originalUrl = imagen.url.startsWith('http') ? imagen.url : `${baseUrl}${imagen.url}`;
+    if (imagen.width) {
+        srcset.push(`${originalUrl} ${imagen.width}w`);
+    } else if (imagen.formats?.large?.width) {
+        const largeWidth = imagen.formats.large.width;
+        srcset.push(`${originalUrl} ${Math.round(largeWidth * 1.5)}w`);
+    } else {
+        srcset.push(`${originalUrl} 1920w`);
+    }
+    
+    return srcset.length > 0 ? srcset.join(', ') : null;
+}
+
+// RouteLoader para obtener un evento específico de Strapi
+export const useEvento = routeLoader$(async ({ params }) => {
+    const slug = params.slug;
+    
+    try {
+        // Buscar por documentId o id
+        const query = qs.stringify({
+            populate: '*',
+            filters: {
+                $or: [
+                    { documentId: { $eq: slug } },
+                    { id: { $eq: parseInt(slug, 10) || 0 } }
+                ]
+            }
+        }, { encodeValuesOnly: true });
+        
+        const res = await fetch(`${BASE_URL}/api/eventos?${query}`);
+        if (!res.ok) {
+            throw new Error(`Failed to fetch evento from Strapi: ${res.status}`);
+        }
+        
+        const data = await res.json() as { data: StrapiEvento[] };
+        
+        if (!data.data || data.data.length === 0) {
+            return null;
+        }
+        
+        const eventoStrapi = data.data[0];
+        const imageUrl = getStrapiImageUrl(eventoStrapi.imagen_principal, 'large');
+        const imageSrcSet = getStrapiImageSrcSet(eventoStrapi.imagen_principal);
+        
+        return {
+            id: eventoStrapi.documentId || eventoStrapi.id.toString(),
+            title: eventoStrapi.titulo,
+            date: formatDate(eventoStrapi.fecha),
+            description: eventoStrapi.description,
+            location: eventoStrapi.lugar,
+            image: imageUrl,
+            imageSrcSet: imageSrcSet,
+            imageAlt: eventoStrapi.imagen_principal?.alternativeText || eventoStrapi.titulo,
+            imageWidth: eventoStrapi.imagen_principal?.width || null,
+            imageHeight: eventoStrapi.imagen_principal?.height || null,
+            destacado: eventoStrapi.destacado,
+            galeria: eventoStrapi.galeria?.map(img => {
+                const baseUrl = BASE_URL.replace(/\/$/, '');
+                return {
+                    url: img.url.startsWith('http') ? img.url : `${baseUrl}${img.url}`
+                };
+            }),
+        };
+    } catch (error) {
+        console.error('Error fetching evento:', error);
+        return null;
+    }
+});
+
+export const useEventoConsulta = routeAction$(async (data, requestEvent) => {
+  // EmailJS
+  const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+  const TEMPLATE_EVENTO_CONSULTA_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_EVENTO_CONSULTA_ID;
+  const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+  const PRIVATE_KEY = requestEvent.env.get('EMAILJS_PRIVATE_KEY');
+
+  if (!SERVICE_ID || !TEMPLATE_EVENTO_CONSULTA_ID || !PUBLIC_KEY || !PRIVATE_KEY) {
+    console.error('Faltan credenciales de EmailJS');
+    return { success: false, message: 'Faltan credenciales de EmailJS en el servidor.' };
+  }
+
+  const payload = {
+    nombre: (data as any).nombre,
+    email: (data as any).email,
+    telefono: (data as any).telefono || 'No proporcionado',
+    mensaje: (data as any).mensaje,
+    eventoTitle: (data as any).eventoTitle,
+  };
+
+  try {
+    const res = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        service_id: SERVICE_ID,
+        template_id: TEMPLATE_EVENTO_CONSULTA_ID,
+        user_id: PUBLIC_KEY,
+        template_params: payload,
+        accessToken: PRIVATE_KEY,
+      }),
+    });
+
+    if (!res.ok) {
+      throw new Error(`EmailJS request failed with status ${res.status}`);
+    }
+
+    return {
+      success: true,
+      message: '¡Consulta enviada! Te contactaremos pronto.',
+    };
+  } catch (err) {
+    console.error('EmailJS FAILED...', err);
+    return {
+      success: false,
+      message: 'Error al enviar la consulta. Intenta nuevamente.',
+    };
+  }
+});
 
 export default component$(() => {
   const loc = useLocation();
-  const slug = loc.params.slug;
   const currentLocale = getLocale();
-  const evento = eventos.find((e) => e.id === slug);
+  const eventoSignal = useEvento();
+  const evento = eventoSignal.value;
+  const showConsultaModal = useSignal(false);
+  const toastMessage = useSignal<{ type: 'success' | 'error'; message: string } | null>(null);
+
+  // Asegurar que el modal esté cerrado cuando el componente se monta en el cliente
+  // eslint-disable-next-line qwik/no-use-visible-task
+  useVisibleTask$(() => {
+    if (showConsultaModal.value) {
+      showConsultaModal.value = false;
+    }
+  });
+
+  const onCloseModal$ = $(() => {
+    showConsultaModal.value = false;
+  });
+
+  const onShowToast$ = $((p: { type: 'success' | 'error'; message: string }) => {
+    toastMessage.value = p;
+    setTimeout(() => {
+      toastMessage.value = null;
+    }, 5000);
+  });
 
   if (!evento) {
     return (
@@ -127,24 +288,47 @@ export default component$(() => {
         <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
           {/* Imagen del evento */}
           <div class="w-full mb-8 md:mb-12">
-            {evento.imageComponent ? (
-              <div class="w-full flex justify-center items-center p-4 md:p-8">
-                <evento.imageComponent 
-                  class="max-w-full h-auto rounded-xl shadow-xl"
-                  alt={evento.title}
-                />
-              </div>
-            ) : (
+            {evento.image ? (
               <div class="w-full flex justify-center items-center p-4 md:p-8">
                 <img 
                   src={evento.image} 
-                  alt={evento.title} 
+                  srcset={evento.imageSrcSet || undefined}
+                  alt={evento.imageAlt || evento.title} 
+                  width={evento.imageWidth || 1200}
+                  height={evento.imageHeight || 630}
                   class="max-w-full h-auto rounded-xl shadow-xl"
                   loading="lazy"
+                  decoding="async"
+                  sizes="100vw"
                 />
+              </div>
+            ) : (
+              <div class="w-full flex justify-center items-center p-4 md:p-8 bg-gray-100 rounded-xl">
+                <div class="text-gray-400 text-center">
+                  <LuCalendar class="h-24 w-24 mx-auto mb-4" />
+                  <p class="text-lg">Sin imagen disponible</p>
+                </div>
               </div>
             )}
           </div>
+          
+          {/* Galería si está disponible */}
+          {evento.galeria && evento.galeria.length > 0 && (
+            <div class="mb-8 px-6 md:px-12">
+              <h3 class="text-xl font-semibold mb-4">{_`Galería`}</h3>
+              <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                {evento.galeria.map((img, index) => (
+                  <img 
+                    key={index}
+                    src={img.url} 
+                    alt={`${evento.title} - ${index + 1}`}
+                    class="w-full h-auto rounded-lg shadow-md hover:shadow-lg transition-shadow cursor-pointer"
+                    loading="lazy"
+                  />
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Contenido del evento */}
           <div class="px-6 md:px-12 pb-8 md:pb-12">
@@ -171,22 +355,150 @@ export default component$(() => {
 
             {/* Descripción */}
             <div class="mb-8">
-              <p class="text-gray-700 text-lg md:text-xl leading-relaxed whitespace-pre-line">
+              <div class="text-gray-700 text-lg md:text-xl leading-relaxed whitespace-pre-line">
                 {evento.description}
-              </p>
+              </div>
             </div>
 
             {/* Botón de acción */}
             <div class="pt-4">
-              <Link href={`/${currentLocale}/contacto`}>
-                <Button class="bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all border-2 border-green-700 px-8 py-3 text-lg">
-                  {_`Consultar`}
-                </Button>
-              </Link>
+              <Modal
+                title={_`Consultar sobre este evento`}
+                description={_`Completa el formulario y te responderemos a la brevedad sobre cualquier consulta relacionada con este evento.`}
+                showFooter={false}
+                triggerClass="btn inline-flex items-center justify-center px-8 py-4 font-semibold text-base transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 bg-green-600 hover:bg-green-700 text-white rounded-lg shadow-lg hover:shadow-xl hover:scale-105 active:translate-y-0"
+                triggerText={_`Consultar`}
+                showSig={showConsultaModal}
+              >
+                <EventoConsultaForm
+                  onCloseModal$={onCloseModal$}
+                  onShowToast$={onShowToast$}
+                  eventoTitle={evento.title}
+                />
+              </Modal>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Toast notification */}
+      {toastMessage.value && (
+        <div class={`fixed bottom-4 right-4 z-50 p-4 rounded-lg shadow-lg ${
+          toastMessage.value.type === 'success' 
+            ? 'bg-green-600 text-white' 
+            : 'bg-red-600 text-white'
+        }`}>
+          <p>{toastMessage.value.message}</p>
+        </div>
+      )}
     </section>
   );
 });
+
+export const head: DocumentHead = ({ resolveValue, url }) => {
+  const evento = resolveValue(useEvento);
+  const siteName = "Mutual Cultural Círculo Italiano Joven Italia";
+  
+  if (!evento) {
+    return {
+      title: _`Evento no encontrado - ${siteName}`,
+      meta: [
+        {
+          name: "description",
+          content: _`El evento solicitado no fue encontrado.`,
+        },
+      ],
+    };
+  }
+
+  const baseUrl = url.origin;
+  const pageUrl = url.href;
+  const imageUrl = evento.image || `${baseUrl}/images/placeholder-evento.jpg`;
+  
+  // Limpiar descripción para meta tags (remover markdown y emojis)
+  const cleanDescription = evento.description
+    .replace(/\*\*/g, '') // Remover markdown bold
+    .replace(/\*/g, '') // Remover markdown italic
+    .replace(/#{1,6}\s/g, '') // Remover markdown headers
+    .replace(/>\s/g, '') // Remover markdown blockquotes
+    .replace(/\n/g, ' ') // Remover saltos de línea
+    .replace(/[🎨🌟💫💜🖌️🌈✨🗓️📍💖🍷🍽️🥟🍗🍰🥤🇮🇹🛒🇦🇷🏺🪴]/g, '') // Remover emojis
+    .trim();
+  
+  const description = cleanDescription.length > 160 
+    ? cleanDescription.substring(0, 157) + '...' 
+    : cleanDescription;
+
+  return {
+    title: `${evento.title} - ${siteName}`,
+    meta: [
+      {
+        name: "description",
+        content: description,
+      },
+      // Open Graph / Facebook
+      {
+        property: "og:type",
+        content: "website",
+      },
+      {
+        property: "og:url",
+        content: pageUrl,
+      },
+      {
+        property: "og:title",
+        content: evento.title,
+      },
+      {
+        property: "og:description",
+        content: description,
+      },
+      {
+        property: "og:image",
+        content: imageUrl,
+      },
+      {
+        property: "og:image:width",
+        content: evento.imageWidth?.toString() || "1200",
+      },
+      {
+        property: "og:image:height",
+        content: evento.imageHeight?.toString() || "630",
+      },
+      {
+        property: "og:site_name",
+        content: siteName,
+      },
+      {
+        property: "og:locale",
+        content: "es_AR",
+      },
+      // Twitter Card
+      {
+        name: "twitter:card",
+        content: "summary_large_image",
+      },
+      {
+        name: "twitter:url",
+        content: pageUrl,
+      },
+      {
+        name: "twitter:title",
+        content: evento.title,
+      },
+      {
+        name: "twitter:description",
+        content: description,
+      },
+      {
+        name: "twitter:image",
+        content: imageUrl,
+      },
+      // Additional meta tags
+      {
+        name: "author",
+        content: siteName,
+      },
+    ],
+  };
+};

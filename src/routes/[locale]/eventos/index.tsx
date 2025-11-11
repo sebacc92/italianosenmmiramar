@@ -1,150 +1,235 @@
 import { component$ } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
-import { Link } from "@builder.io/qwik-city";
+import { Link, routeLoader$ } from "@builder.io/qwik-city";
 import { LuCalendar, LuClock, LuMapPin } from "@qwikest/icons/lucide";
 import { Button } from "~/components/ui/button/button";
 import { _, getLocale } from "compiled-i18n";
-import EventoAniversarioImg from '~/media/eventos1.png?jsx';
-import EventoMalvinasImg from '~/media/eventos2.png?jsx';
-import MuseoRodanteImg from '~/media/museo-rodante.webp?jsx';
-import EventoVideoconferenciaImg from '~/media/videoconferencia1.jpeg?jsx';
-import EventoAntilefIuraImg from '~/media/eventos3.webp?jsx';
-import EventoAsambleaImg from '~/media/asamblea-anual.png?jsx';
+import qs from 'qs';
 
-const eventos = [
-    {
-        id: "aniversario-136",
-        title: "136° Aniversario - Cena, baile y algo más!",
-        date: "Sábado 10 de Mayo - 21:30hs",
-        imageComponent: EventoMalvinasImg,
-        description:
-            "¡Celebramos nuestros inicios! Cena, baile y algo más. Anticipadas hasta el 8/05: Socios $23.000, No socios $27.000. Entrada general desde el 9/05: $32.000.",
-        location: "Mutual Cultural Círculo Italiano Joven Italia, Miramar",
-    },
-    {
-        id: "peones-malvinas",
-        title: "Peones de Malvinas - Anhelando verte otra vez",
-        date: "Martes 6 de Mayo - 10hs y 15:30hs",
-        imageComponent: EventoAniversarioImg,
-        description:
-            "Obra de la Escuela de danza Ritmos en Acción. La historia de una madre que extraña a su hijo, de un hijo que necesita a su mamá, de un pueblo que llora y sueña libertad. Entrada general: $4.000. Valor especial escuelas: $2.000. Reservas por WhatsApp: 223 4219060.",
-        location: "Mutual Cultural Círculo Italiano Joven Italia, Miramar",
-    },
-    {
-        id: "bienal-arte-2025",
-        title: "Bienal de Arte 2025",
-        date: "Sábado 5 de Abril - 19hs",
-        image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-cP9qd0B8BbVFb6VnIrSYDYaeOtYGVw.png",
-        description:
-            "Muestra de arte pequeño formato. Destacándose la presentación de una obra de Raquel Forner, proveniente del Museo Pcial. de Bellas Artes, Emilio Pettoruti.",
-        location: "Mutual Cultural Círculo Italiano, Calle 24 n1214",
-    },
-    {
-        id: "cena-bienal-2025",
-        title: "Cena Bienal 2025",
-        date: "Jueves 10 de Abril - 21hs",
-        image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-d9PNSvU4MNqCngV983dWaJ93rqNoK3.png",
-        description:
-            "Menú: Bruschette, lasagne, fragole con panna montata, bebidas. Precios: Socios $20.000, No socios $25.000. Anticipadas hasta martes 8/04 $18.000 socios y $23.000 no socios.",
-        location: "Mutual Cultural Círculo Italiano, Calle 24 n1214",
-    },
-    {
-        id: "charla-museo-rodante",
-        title: "Charla: Un Museo Rodante",
-        date: "Jueves 11 de Abril - 17:30hs",
-        image: "/images/placeholder-evento.jpg",
-        imageComponent: MuseoRodanteImg,
-        description:
-            "Importante charla a cargo de Federico Rovituso: 'Un Museo Rodante' con colecciones e historias del Museo Provincial de Bellas Artes Emilio Pettoruti.",
-        location: "Mutual Cultural Círculo Italiano, Calle 24 n1214",
-    },
-    {
-        id: "inicio-clases-italiano",
-        title: "Inicio Clases de Italiano",
-        date: "Lunes 17 de Marzo",
-        image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-1RsMvba8MpkNeAZHIRkhdrxBiRwPSj.png",
-        description:
-            "Arranca el ciclo lectivo 2025 de clases de Italiano, con sus diferentes niveles y propuestas para todas las edades. Inscripciones abiertas hasta el 4 de abril.",
-        location: "Mutual Cultural Círculo Italiano, Calle 24 n1214",
-    },
-    {
-        id: "videoconferencia-renacimiento-italia",
-        title: "El Renacimiento en Italia: cultura y sociedad",
-        date: "Viernes 25 de Abril - 17:30hs",
-        imageComponent: EventoVideoconferenciaImg,
-        description:
-            "Videoconferencia a cargo de Eduardo Crivelli Minutti. El Renacimiento en Italia fue un periodo de transformación cultural que marcó el paso de la Edad Media a la modernidad, recuperando la herencia clásica y promoviendo el humanismo. Ciudades como Florencia, Venecia y Roma se destacaron por su innovación artística y cambios sociales, políticos y económicos que influyeron en el pensamiento moderno.",
-        location: "Via Zoom y presencial en Mutual Cultural Italiana, calle 24 n1214",
-    },
-    {
-        id: "antilef-iura-expo-2025",
-        title: "Exposición Antilef Iura + Música",
-        date: "Sábado 26 de Abril - 18hs",
-        imageComponent: EventoAntilefIuraImg,
-        description: "Exposición de arte y música en la Mutual Cultural Círculo Italiano Joven Italia. Obras de Antilef Iura y acompañamiento musical. ¡No te lo pierdas!",
-        location: "Mutual Cultural Círculo Italiano Joven Italia, Miramar",
-    },
-    {
-        id: "asamblea-anual-2025",
-        title: "Asamblea Anual Ordinaria 2025",
-        date: "Viernes 7 de Noviembre - 20:00hs",
-        imageComponent: EventoAsambleaImg,
-        description:
-            "Tenemos el agrado de invitarlos a participar de la Asamblea Anual Ordinaria de la Mutual Cultural Círculo Italiano Joven Italia, que se realizará el viernes 7 de noviembre de 2025 a las 20:00 hs., en nuestra sede de calle 24 Nº 1214, Miramar. Adjuntamos la convocatoria oficial con el Orden del Día. La participación de todos es muy importante para seguir fortaleciendo nuestra institución.",
-        location: "Mutual Cultural Círculo Italiano Joven Italia, Calle 24 Nº 1214, Miramar",
-    },
-];
+const BASE_URL = import.meta.env.VITE_STRAPI_URL;
 
-// Utilidad para parsear fechas en formato "Día de la semana D de Mes - HShs" o "Lunes 17 de Marzo"
-function parseEventoDate(dateStr: string): Date | null {
-    // Intentar extraer día, mes y año
-    const meses = [
-        "enero", "febrero", "marzo", "abril", "mayo", "junio",
-        "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"
-    ];
-    const regex = /([0-9]{1,2}) de ([A-Za-záéíóúñ]+)(?: - (\d{1,2})h)?/i;
-    const match = dateStr.match(regex);
-    if (match) {
-        const dia = parseInt(match[1], 10);
-        const mes = meses.findIndex(m => m.toLowerCase() === match[2].toLowerCase());
-        const anio = 2025; // Hardcodeado para este dataset
-        if (mes >= 0) {
-            return new Date(anio, mes, dia);
-        }
-    }
-    // Si no matchea, intentar con otro formato (ej: "Lunes 17 de Marzo")
-    const regex2 = /([0-9]{1,2}) de ([A-Za-záéíóúñ]+)/i;
-    const match2 = dateStr.match(regex2);
-    if (match2) {
-        const dia = parseInt(match2[1], 10);
-        const mes = meses.findIndex(m => m.toLowerCase() === match2[2].toLowerCase());
-        const anio = 2025;
-        if (mes >= 0) {
-            return new Date(anio, mes, dia);
-        }
-    }
-    return null;
+interface StrapiEvento {
+    id: number;
+    documentId: string;
+    titulo: string;
+    fecha: string;
+    lugar: string;
+    destacado: boolean;
+    description: string;
+    imagen_principal: {
+        url: string;
+        formats?: {
+            thumbnail?: { url: string; width?: number; height?: number };
+            small?: { url: string; width?: number; height?: number };
+            medium?: { url: string; width?: number; height?: number };
+            large?: { url: string; width?: number; height?: number };
+        };
+        width?: number;
+        height?: number;
+        alternativeText?: string | null;
+    } | null;
+    galeria?: Array<{
+        url: string;
+        formats?: {
+            thumbnail?: { url: string; width?: number; height?: number };
+            small?: { url: string; width?: number; height?: number };
+            medium?: { url: string; width?: number; height?: number };
+            large?: { url: string; width?: number; height?: number };
+        };
+    }> | null;
 }
 
-const today = new Date(2025, 3, 27); // 27 de abril de 2025 (mes 3 = abril)
+// Tipo para evento formateado
+interface EventoFormateado {
+    id: string;
+    title: string;
+    date: string;
+    dateObj: Date;
+    description: string;
+    location: string;
+    image: string | null;
+    imageLarge: string | null;
+    imageAlt: string | null;
+    imageSrcSet: string | null;
+    imageWidth: number | null;
+    imageHeight: number | null;
+    destacado: boolean;
+    galeria?: Array<{ url: string }>;
+}
 
-// Ordenar eventos por fecha descendente (más reciente primero)
-const eventosOrdenados = [...eventos].sort((a, b) => {
-    const fechaA = parseEventoDate(a.date) || new Date(1900, 0, 1);
-    const fechaB = parseEventoDate(b.date) || new Date(1900, 0, 1);
-    return fechaB.getTime() - fechaA.getTime();
-});
-const eventosProximos = eventosOrdenados.filter(e => {
-    const fecha = parseEventoDate(e.date);
-    return fecha && fecha >= today;
-});
-const eventosPasados = eventosOrdenados.filter(e => {
-    const fecha = parseEventoDate(e.date);
-    return fecha && fecha < today;
+// Función para formatear fecha en español
+function formatDate(fechaISO: string): string {
+    const fecha = new Date(fechaISO);
+    const diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+    const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 
+                   'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+    
+    const diaSemana = diasSemana[fecha.getDay()];
+    const dia = fecha.getDate();
+    const mes = meses[fecha.getMonth()];
+    const hora = fecha.getHours();
+    const minutos = fecha.getMinutes();
+    
+    let dateStr = `${diaSemana} ${dia} de ${mes}`;
+    if (hora > 0 || minutos > 0) {
+        const horaStr = hora.toString().padStart(2, '0');
+        const minutosStr = minutos.toString().padStart(2, '0');
+        dateStr += ` - ${horaStr}:${minutosStr}hs`;
+    }
+    
+    return dateStr;
+}
+
+// Función para obtener URL de imagen optimizada de Strapi
+function getStrapiImageUrl(imagen: StrapiEvento['imagen_principal'], size: 'thumbnail' | 'small' | 'medium' | 'large' | 'original' = 'medium'): string | null {
+    if (!imagen) return null;
+    
+    const baseUrl = BASE_URL.replace(/\/$/, ''); // Remover trailing slash si existe
+    const imageUrl = imagen.url.startsWith('http') ? imagen.url : `${baseUrl}${imagen.url}`;
+    
+    // Si hay formato específico solicitado y existe, usarlo
+    if (size !== 'original' && imagen.formats && imagen.formats[size]) {
+        const format = imagen.formats[size];
+        if (format) {
+            const formatUrl = format.url;
+            return formatUrl.startsWith('http') ? formatUrl : `${baseUrl}${formatUrl}`;
+        }
+    }
+    
+    return imageUrl;
+}
+
+// Función para generar srcset para imágenes responsivas
+function getStrapiImageSrcSet(imagen: StrapiEvento['imagen_principal']): string | null {
+    if (!imagen || !imagen.formats) return null;
+    
+    const baseUrl = BASE_URL.replace(/\/$/, '');
+    const srcset: string[] = [];
+    
+    // Agregar cada formato disponible al srcset (de menor a mayor)
+    if (imagen.formats.thumbnail) {
+        const thumbnail = imagen.formats.thumbnail;
+        const url = thumbnail.url.startsWith('http') 
+            ? thumbnail.url 
+            : `${baseUrl}${thumbnail.url}`;
+        // Usar el width del formato si está disponible, sino un valor por defecto
+        const width = thumbnail.width || 156;
+        srcset.push(`${url} ${width}w`);
+    }
+    if (imagen.formats.small) {
+        const small = imagen.formats.small;
+        const url = small.url.startsWith('http') 
+            ? small.url 
+            : `${baseUrl}${small.url}`;
+        const width = small.width || 500;
+        srcset.push(`${url} ${width}w`);
+    }
+    if (imagen.formats.medium) {
+        const medium = imagen.formats.medium;
+        const url = medium.url.startsWith('http') 
+            ? medium.url 
+            : `${baseUrl}${medium.url}`;
+        const width = medium.width || 750;
+        srcset.push(`${url} ${width}w`);
+    }
+    if (imagen.formats.large) {
+        const large = imagen.formats.large;
+        const url = large.url.startsWith('http') 
+            ? large.url 
+            : `${baseUrl}${large.url}`;
+        const width = large.width || 1000;
+        srcset.push(`${url} ${width}w`);
+    }
+    
+    // Agregar la imagen original como fallback (mayor resolución)
+    const originalUrl = imagen.url.startsWith('http') ? imagen.url : `${baseUrl}${imagen.url}`;
+    if (imagen.width) {
+        srcset.push(`${originalUrl} ${imagen.width}w`);
+    } else if (imagen.formats?.large?.width) {
+        // Si no hay width en la original pero hay en large, usar ese + algún margen
+        const largeWidth = imagen.formats.large.width;
+        srcset.push(`${originalUrl} ${Math.round(largeWidth * 1.5)}w`);
+    } else {
+        srcset.push(`${originalUrl} 1920w`);
+    }
+    
+    return srcset.length > 0 ? srcset.join(', ') : null;
+}
+
+// RouteLoader para obtener eventos de Strapi
+export const useEventos = routeLoader$(async () => {
+    try {
+        const query = qs.stringify({
+            populate: '*',
+            sort: ['fecha:desc'], // Ordenar por fecha descendente (más reciente primero)
+        }, { encodeValuesOnly: true });
+        
+        const res = await fetch(`${BASE_URL}/api/eventos?${query}`);
+        if (!res.ok) {
+            throw new Error(`Failed to fetch eventos from Strapi: ${res.status}`);
+        }
+        
+        const data = await res.json() as { data: StrapiEvento[] };
+        
+        // Mapear eventos de Strapi al formato que necesitamos
+        const eventosFormateados: EventoFormateado[] = data.data.map((evento) => {
+            const fechaObj = new Date(evento.fecha);
+            const imageUrl = getStrapiImageUrl(evento.imagen_principal, 'medium');
+            const imageLargeUrl = getStrapiImageUrl(evento.imagen_principal, 'large') || 
+                                  getStrapiImageUrl(evento.imagen_principal, 'original');
+            const imageSrcSet = getStrapiImageSrcSet(evento.imagen_principal);
+            
+            return {
+                id: evento.documentId || evento.id.toString(),
+                title: evento.titulo,
+                date: formatDate(evento.fecha),
+                dateObj: fechaObj,
+                description: evento.description,
+                location: evento.lugar,
+                image: imageUrl,
+                imageLarge: imageLargeUrl,
+                imageAlt: evento.imagen_principal?.alternativeText || evento.titulo,
+                imageSrcSet: imageSrcSet,
+                imageWidth: evento.imagen_principal?.width || null,
+                imageHeight: evento.imagen_principal?.height || null,
+                destacado: evento.destacado,
+                galeria: evento.galeria?.map(img => ({
+                    url: img.url.startsWith('http') ? img.url : `${BASE_URL.replace(/\/$/, '')}${img.url}`
+                })),
+            };
+        });
+        
+        // Ordenar por fecha (más reciente primero) - ya viene ordenado de Strapi, pero lo reordenamos por si acaso
+        eventosFormateados.sort((a, b) => b.dateObj.getTime() - a.dateObj.getTime());
+        
+        return eventosFormateados;
+    } catch (error) {
+        console.error('Error fetching eventos:', error);
+        return [];
+    }
 });
 
 export default component$(() => {
     const currentLocale = getLocale();
+    const eventosSignal = useEventos();
+    const eventos = eventosSignal.value;
+    
+    // Obtener la fecha de hoy, normalizada a medianoche para comparar solo fechas (sin hora)
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    // Clasificar eventos en próximos y pasados basándose en la fecha actual
+    const eventosProximos = eventos.filter(e => {
+        const fecha = new Date(e.dateObj);
+        fecha.setHours(0, 0, 0, 0);
+        return fecha >= today;
+    });
+    
+    const eventosPasados = eventos.filter(e => {
+        const fecha = new Date(e.dateObj);
+        fecha.setHours(0, 0, 0, 0);
+        return fecha < today;
+    });
     return (
         <div class="flex min-h-screen flex-col">
             <main class="flex-1">
@@ -171,10 +256,22 @@ export default component$(() => {
                             {eventosProximos.map((evento) => (
                                 <div key={evento.id} class="border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
                                     <div class="relative h-64 flex items-center justify-center bg-gray-100">
-                                        {evento.imageComponent ? (
-                                            <evento.imageComponent style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top' }} />
+                                        {evento.image ? (
+                                            <img 
+                                                src={evento.image} 
+                                                srcset={evento.imageSrcSet || undefined}
+                                                alt={evento.imageAlt || evento.title} 
+                                                width={evento.imageWidth || 800} 
+                                                height={evento.imageHeight || 600} 
+                                                class="w-full h-full object-cover object-top" 
+                                                loading="lazy"
+                                                decoding="async"
+                                                sizes="(max-width: 768px) 100vw, 50vw"
+                                            />
                                         ) : (
-                                            <img src={evento.image} alt={evento.title} class="w-full h-full object-cover object-top" />
+                                            <div class="w-full h-full flex items-center justify-center text-gray-400">
+                                                <LuCalendar class="h-16 w-16" />
+                                            </div>
                                         )}
                                     </div>
                                     <div class="p-6 border-b">
@@ -185,7 +282,7 @@ export default component$(() => {
                                         </div>
                                     </div>
                                     <div class="p-6">
-                                        <p class="mb-4 text-gray-600">{evento.description}</p>
+                                        <div class="mb-4 text-gray-600 line-clamp-3">{evento.description}</div>
                                         <div class="flex items-center gap-2 text-sm text-gray-600">
                                             <LuMapPin class="h-4 w-4" />
                                             <span>{evento.location}</span>
@@ -213,10 +310,22 @@ export default component$(() => {
                             {eventosPasados.map((evento) => (
                                 <div key={evento.id} class="border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow opacity-70">
                                     <div class="relative h-64 flex items-center justify-center bg-gray-100">
-                                        {evento.imageComponent ? (
-                                            <evento.imageComponent style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top' }} />
+                                        {evento.image ? (
+                                            <img 
+                                                src={evento.image} 
+                                                srcset={evento.imageSrcSet || undefined}
+                                                alt={evento.imageAlt || evento.title} 
+                                                width={evento.imageWidth || 800} 
+                                                height={evento.imageHeight || 600} 
+                                                class="w-full h-full object-cover object-top" 
+                                                loading="lazy"
+                                                decoding="async"
+                                                sizes="(max-width: 768px) 100vw, 50vw"
+                                            />
                                         ) : (
-                                            <img src={evento.image} alt={evento.title} class="w-full h-full object-cover object-top" />
+                                            <div class="w-full h-full flex items-center justify-center text-gray-400">
+                                                <LuCalendar class="h-16 w-16" />
+                                            </div>
                                         )}
                                     </div>
                                     <div class="p-6 border-b">
@@ -227,7 +336,7 @@ export default component$(() => {
                                         </div>
                                     </div>
                                     <div class="p-6">
-                                        <p class="mb-4 text-gray-600">{evento.description}</p>
+                                        <div class="mb-4 text-gray-600 line-clamp-3">{evento.description}</div>
                                         <div class="flex items-center gap-2 text-sm text-gray-600">
                                             <LuMapPin class="h-4 w-4" />
                                             <span>{evento.location}</span>
@@ -271,11 +380,7 @@ export default component$(() => {
                                 </div>
 
                                 <div class="space-y-4">
-                                    {[...eventos].sort((a, b) => {
-                                        const fechaA = parseEventoDate(a.date) || new Date(1900, 0, 1);
-                                        const fechaB = parseEventoDate(b.date) || new Date(1900, 0, 1);
-                                        return fechaB.getTime() - fechaA.getTime();
-                                    }).map((evento) => (
+                                    {eventos.map((evento) => (
                                         <div key={evento.id} class="flex gap-4 border-b pb-4">
                                             <div class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-md bg-gray-100">
                                                 <LuCalendar class="h-6 w-6" />
