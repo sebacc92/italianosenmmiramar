@@ -1,66 +1,98 @@
-import { component$ } from "@builder.io/qwik";
+import { component$, useStyles$ } from "@builder.io/qwik";
 import { Link } from "@builder.io/qwik-city";
 import { _, getLocale } from "compiled-i18n";
+import styles from './HeroSlider.css?inline';
 
 export default component$(({ title, description }: { title: string, description: string }) => {
+    useStyles$(styles);
     const currentLocale = getLocale();
+    
     return (
-        <section class="relative w-full min-h-[calc(100dvh-120px)] md:min-h-[calc(100dvh-160px)] flex items-center justify-center text-center">
-            {/* Background image */}
-            <img 
-                src="/images/exterior_institucion.jpg" 
-                alt="Sede del Círculo Italiano" 
-                class="absolute inset-0 h-full w-full object-cover"
-            />
+        <section class="hero-section">
+            {/* Background image with parallax effect */}
+            <div class="hero-bg-wrapper">
+                <img 
+                    src="/images/exterior_institucion.jpg" 
+                    alt="Sede del Círculo Italiano" 
+                    class="hero-bg-image"
+                />
+            </div>
             
-            {/* Gradient overlay for better text readability */}
-            <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-black/50 to-black/60"></div>
+            {/* Refined gradient overlay - lighter and more elegant */}
+            <div class="hero-overlay-gradient"></div>
+            
+            {/* Subtle vignette effect */}
+            <div class="hero-overlay-vignette"></div>
 
-            {/* Content - Centered vertically and horizontally */}
-            <div class="relative z-10 w-full px-4 md:px-8 lg:px-12">
+            {/* Content */}
+            <div class="hero-content">
                 <div class="container mx-auto">
                     <div class="flex justify-center">
-                        <div class="max-w-4xl">
-                            {/* Card with glassmorphism effect */}
-                            <div class="bg-black/25 backdrop-blur-sm border border-white/20 p-8 md:p-10 lg:p-12 rounded-2xl shadow-2xl">
-                                {/* Italian flag accent */}
-                                <div class="flex gap-2 justify-center mb-6">
-                                    <div class="flex">
-                                        <span class="w-4 h-6 bg-[#009246] rounded-l"></span>
-                                        <span class="w-4 h-6 bg-white"></span>
-                                        <span class="w-4 h-6 bg-[#CE2B37] rounded-r"></span>
-                                    </div>
-                                    <div class="flex">
-                                        <span class="w-4 h-6 bg-[#6EC6F1] rounded-l"></span>
-                                        <span class="w-4 h-6 bg-white"></span>
-                                        <span class="w-4 h-6 bg-[#6EC6F1] rounded-r"></span>
-                                    </div>
+                        <div class="max-w-5xl w-full">
+                            {/* Flags with improved design */}
+                            <div class="hero-flags">
+                                <div class="flag-group">
+                                    <span class="flag-stripe flag-italy-green"></span>
+                                    <span class="flag-stripe flag-white"></span>
+                                    <span class="flag-stripe flag-italy-red"></span>
                                 </div>
+                                <div class="flag-group">
+                                    <span class="flag-stripe flag-argentina-blue"></span>
+                                    <span class="flag-stripe flag-white"></span>
+                                    <span class="flag-stripe flag-argentina-blue"></span>
+                                </div>
+                            </div>
 
-                                <p class="text-xs sm:text-sm md:text-base font-semibold uppercase tracking-[0.3em] text-white/70 mb-3">
+                            {/* Foundation date badge */}
+                            <div class="hero-badge-wrapper">
+                                <span class="hero-badge">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
                                     {_`Fundado el 28 de Abril de 1889`}
-                                </p>
+                                </span>
+                            </div>
 
-                                <h1 class="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-4 leading-tight">
-                                    {title}
-                                </h1>
-                                
-                                <p class="text-white/90 text-base sm:text-lg lg:text-xl mb-8 leading-relaxed">
-                                    {description}
-                                </p>
-                                
-                                <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                                    <Link 
-                                        href={`/${currentLocale}/eventos`} 
-                                        class="group px-6 py-3.5 bg-white/95 hover:bg-white text-gray-900 rounded-lg text-sm md:text-base font-medium shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 border border-white/50"
-                                    >
-                                        <span class="flex items-center gap-2">
-                                            {_`Ver próximos eventos`}
-                                            <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                                            </svg>
-                                        </span>
-                                    </Link>
+                            {/* Main heading with text shadow for better readability */}
+                            <h1 class="hero-title">
+                                {title}
+                            </h1>
+                            
+                            {/* Description with enhanced readability */}
+                            <p class="hero-description">
+                                {description}
+                            </p>
+                            
+                            {/* CTA Button with modern design */}
+                            <div class="hero-cta-wrapper">
+                                <Link 
+                                    href={`/${currentLocale}/eventos`} 
+                                    class="hero-cta-button"
+                                >
+                                    <span class="hero-cta-content">
+                                        {_`Ver próximos eventos`}
+                                        <svg class="hero-cta-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                                        </svg>
+                                    </span>
+                                    {/* Subtle gradient overlay on hover */}
+                                    <div class="hero-cta-shine"></div>
+                                </Link>
+                            </div>
+
+                            {/* Stats or features */}
+                            <div class="hero-stats">
+                                <div class="hero-stat-item">
+                                    <div class="hero-stat-number">136+</div>
+                                    <div class="hero-stat-label">Años de historia</div>
+                                </div>
+                                <div class="hero-stat-item">
+                                    <div class="hero-stat-number">400+</div>
+                                    <div class="hero-stat-label">Socios activos</div>
+                                </div>
+                                <div class="hero-stat-item">
+                                    <div class="hero-stat-number">50+</div>
+                                    <div class="hero-stat-label">Eventos anuales</div>
                                 </div>
                             </div>
                         </div>
@@ -68,12 +100,16 @@ export default component$(({ title, description }: { title: string, description:
                 </div>
             </div>
 
-            {/* Subtle scroll indicator */}
-            <div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce hidden md:block">
-                <svg class="w-6 h-6 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                </svg>
-            </div>
+            {/* Enhanced scroll indicator - Clickeable */}
+            <a 
+                href="#services" 
+                class="hero-scroll-indicator"
+                aria-label="Ir a servicios"
+            >
+                <div class="hero-scroll-mouse">
+                    <div class="hero-scroll-wheel"></div>
+                </div>
+            </a>
         </section>
     );
 });
