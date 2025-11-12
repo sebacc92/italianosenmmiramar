@@ -1,5 +1,5 @@
 import { component$, useSignal, $, useVisibleTask$ } from "@builder.io/qwik";
-import { useLocation, Link, type DocumentHead, routeAction$, routeLoader$ } from "@builder.io/qwik-city";
+import { Link, type DocumentHead, routeAction$, routeLoader$ } from "@builder.io/qwik-city";
 import { LuCalendar, LuMapPin, LuArrowLeft } from "@qwikest/icons/lucide";
 import { Modal } from "~/components/ui";
 import EventoConsultaForm from "~/components/EventoConsultaForm";
@@ -132,28 +132,26 @@ export const useEvento = routeLoader$(async ({ params }) => {
     
     try {
         // Buscar por documentId o id
-        const query = qs.stringify({
+        const query = qs.stringify(
+          {
             populate: '*',
-            filters: {
-                $or: [
-                    { documentId: { $eq: slug } },
-                    { id: { $eq: parseInt(slug, 10) || 0 } }
-                ]
-            }
-        }, { encodeValuesOnly: true });
+          },
+          { encodeValuesOnly: true }
+        );
         
-        const res = await fetch(`${BASE_URL}/api/eventos?${query}`);
+        const res = await fetch(`${BASE_URL}/api/eventos/${slug}?${query}`);
         if (!res.ok) {
             throw new Error(`Failed to fetch evento from Strapi: ${res.status}`);
         }
         
-        const data = await res.json() as { data: StrapiEvento[] };
+        const data = await res.json() as { data: StrapiEvento };
         
-        if (!data.data || data.data.length === 0) {
+        console.log('data2', data);
+        if (!data.data) {
             return null;
         }
         
-        const eventoStrapi = data.data[0];
+        const eventoStrapi = data.data;
         const imageUrl = getStrapiImageUrl(eventoStrapi.imagen_principal, 'large');
         const imageSrcSet = getStrapiImageSrcSet(eventoStrapi.imagen_principal);
         
@@ -235,7 +233,6 @@ export const useEventoConsulta = routeAction$(async (data, requestEvent) => {
 });
 
 export default component$(() => {
-  const loc = useLocation();
   const currentLocale = getLocale();
   const eventoSignal = useEvento();
   const evento = eventoSignal.value;
@@ -422,7 +419,6 @@ export const head: DocumentHead = ({ resolveValue, url }) => {
     .replace(/#{1,6}\s/g, '') // Remover markdown headers
     .replace(/>\s/g, '') // Remover markdown blockquotes
     .replace(/\n/g, ' ') // Remover saltos de línea
-    .replace(/[🎨🌟💫💜🖌️🌈✨🗓️📍💖🍷🍽️🥟🍗🍰🥤🇮🇹🛒🇦🇷🏺🪴]/g, '') // Remover emojis
     .trim();
   
   const description = cleanDescription.length > 160 

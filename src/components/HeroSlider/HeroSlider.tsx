@@ -5,7 +5,7 @@ import { _, getLocale } from "compiled-i18n";
 export default component$(({ title, description }: { title: string, description: string }) => {
     const currentLocale = getLocale();
     return (
-        <section class="relative w-full min-h-[calc(100dvh-120px)] md:min-h-[calc(100dvh-160px)] flex items-center justify-center">
+        <section class="relative w-full min-h-[calc(100dvh-120px)] md:min-h-[calc(100dvh-160px)] flex items-center justify-center text-center">
             {/* Background image */}
             <img 
                 src="/images/exterior_institucion.jpg" 
@@ -19,12 +19,12 @@ export default component$(({ title, description }: { title: string, description:
             {/* Content - Centered vertically and horizontally */}
             <div class="relative z-10 w-full px-4 md:px-8 lg:px-12">
                 <div class="container mx-auto">
-                    <div class="flex justify-center md:justify-start">
-                        <div class="text-center md:text-left max-w-5xl">
+                    <div class="flex justify-center">
+                        <div class="max-w-4xl">
                             {/* Card with glassmorphism effect */}
                             <div class="bg-black/25 backdrop-blur-sm border border-white/20 p-8 md:p-10 lg:p-12 rounded-2xl shadow-2xl">
                                 {/* Italian flag accent */}
-                                <div class="flex gap-2 justify-center md:justify-start mb-6">
+                                <div class="flex gap-2 justify-center mb-6">
                                     <div class="flex">
                                         <span class="w-4 h-6 bg-[#009246] rounded-l"></span>
                                         <span class="w-4 h-6 bg-white"></span>
@@ -36,7 +36,11 @@ export default component$(({ title, description }: { title: string, description:
                                         <span class="w-4 h-6 bg-[#6EC6F1] rounded-r"></span>
                                     </div>
                                 </div>
-                                
+
+                                <p class="text-xs sm:text-sm md:text-base font-semibold uppercase tracking-[0.3em] text-white/70 mb-3">
+                                    {_`Fundado el 28 de Abril de 1889`}
+                                </p>
+
                                 <h1 class="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-4 leading-tight">
                                     {title}
                                 </h1>
@@ -45,15 +49,7 @@ export default component$(({ title, description }: { title: string, description:
                                     {description}
                                 </p>
                                 
-                                <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-                                    <Link 
-                                        href={`/${currentLocale}/nosotros`} 
-                                        class="group relative px-6 py-3.5 bg-[#CE2B37] hover:bg-[#b52532] text-white rounded-lg text-sm md:text-base font-medium shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 overflow-hidden"
-                                    >
-                                        <span class="relative z-10">{_`Conocer nuestra historia`}</span>
-                                        <div class="absolute inset-0 bg-gradient-to-r from-[#b52532] to-[#CE2B37] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                                    </Link>
-                                    
+                                <div class="flex flex-col sm:flex-row gap-4 justify-center">
                                     <Link 
                                         href={`/${currentLocale}/eventos`} 
                                         class="group px-6 py-3.5 bg-white/95 hover:bg-white text-gray-900 rounded-lg text-sm md:text-base font-medium shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 border border-white/50"

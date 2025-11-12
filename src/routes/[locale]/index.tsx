@@ -1,7 +1,7 @@
 import { component$ } from "@builder.io/qwik";
 import { Link, routeLoader$, type DocumentHead } from "@builder.io/qwik-city";
 import { _, getLocale } from "compiled-i18n";
-import { LuCalendar, LuLanguages, LuFileText, LuMusic, LuApple, LuPalette } from "@qwikest/icons/lucide";
+import { LuCalendar, LuLanguages, LuFileText, LuMusic, LuApple, LuPalette, LuBrush, LuBuilding2 } from "@qwikest/icons/lucide";
 import HeroSlider from "~/components/HeroSlider/HeroSlider";
 import { Button, Card } from "~/components/ui";
 import ImageStory from "~/media/story.jpg?h=500&jsx";
@@ -73,7 +73,7 @@ export default component$(() => {
               {_`Descubre todo lo que el Círculo Italiano de Miramar tiene para ofrecerte`}
             </p>
           </div>
-          <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3 max-w-5xl mx-auto">
+          <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-4 max-w-6xl mx-auto">
             {/* Tarjeta Idiomas */}
             <Card.Root class="transition duration-300 ease-in-out hover:shadow-xl border border-green-600 rounded-2xl bg-white/95 shadow-md hover:-translate-y-1 relative overflow-hidden text-center">
               <div class="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-green-600 via-white to-red-600 rounded-t-2xl" />
@@ -169,6 +169,24 @@ export default component$(() => {
                 </Button>
               </Card.Footer>
             </Card.Root>
+            {/* Tarjeta Taller de Arte */}
+            <Card.Root class="transition duration-300 ease-in-out hover:shadow-xl border border-green-600 rounded-2xl bg-white/95 shadow-md hover:-translate-y-1 relative overflow-hidden text-center">
+              <div class="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-green-600 via-white to-red-600 rounded-t-2xl" />
+              <Card.Header class="flex flex-col items-center">
+                <div class="h-12 w-12 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center shadow-sm mb-3">
+                  <LuBrush class="h-6 w-6" />
+                </div>
+                <Card.Title class="text-xl text-gray-800 font-serif tracking-wide">{_`Taller de arte`}</Card.Title>
+                <Card.Description class="text-gray-600">{_`Espacio creativo para aprender distintas técnicas artísticas con profesores y artistas invitados.`}</Card.Description>
+              </Card.Header>
+              <Card.Footer class="flex justify-center">
+                <Button class="bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-md transition-all border-2 border-green-700">
+                  <Link href={`/${currentLocale}/eventos`} class="w-full">
+                    {_`Próximas actividades`}
+                  </Link>
+                </Button>
+              </Card.Footer>
+            </Card.Root>
             {/* Tarjeta Exposición de obras */}
             <Card.Root class="transition duration-300 ease-in-out hover:shadow-xl border border-green-600 rounded-2xl bg-white/95 shadow-md hover:-translate-y-1 relative overflow-hidden text-center">
               <div class="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-green-600 via-white to-red-600 rounded-t-2xl" />
@@ -183,6 +201,24 @@ export default component$(() => {
                 <Button class="bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-md transition-all border-2 border-green-700">
                   <Link href={`/${currentLocale}/eventos`} class="w-full">
                     {_`Ver exposiciones`}
+                  </Link>
+                </Button>
+              </Card.Footer>
+            </Card.Root>
+            {/* Tarjeta Alquiler de Salones */}
+            <Card.Root class="transition duration-300 ease-in-out hover:shadow-xl border border-green-600 rounded-2xl bg-white/95 shadow-md hover:-translate-y-1 relative overflow-hidden text-center">
+              <div class="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-green-600 via-white to-red-600 rounded-t-2xl" />
+              <Card.Header class="flex flex-col items-center">
+                <div class="h-12 w-12 rounded-full bg-slate-50 text-slate-600 flex items-center justify-center shadow-sm mb-3">
+                  <LuBuilding2 class="h-6 w-6" />
+                </div>
+                <Card.Title class="text-xl text-gray-800 font-serif tracking-wide">{_`Alquiler de salones`}</Card.Title>
+                <Card.Description class="text-gray-600">{_`Ofrecemos espacios equipados para reuniones, capacitaciones y celebraciones familiares.`}</Card.Description>
+              </Card.Header>
+              <Card.Footer class="flex justify-center">
+                <Button class="bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg shadow-md transition-all border-2 border-red-700">
+                  <Link href={`/${currentLocale}/contacto`} class="w-full">
+                    {_`Consultar disponibilidad`}
                   </Link>
                 </Button>
               </Card.Footer>
@@ -240,9 +276,9 @@ export default component$(() => {
               </p>
               <div class="flex flex-wrap justify-center gap-4">
                 <div>
-                  <Link href={`/${currentLocale}/contacto`} class="w-full">
+                  <Link href={`/${currentLocale}/asociate`} class="w-full">
                     <Button class="bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-md transition-all border-2 border-green-700">
-                      {_`Hazte socio`}
+                      {_`Asociate`}
                     </Button>
                   </Link>
                 </div>

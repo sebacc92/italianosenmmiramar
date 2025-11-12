@@ -335,19 +335,18 @@ const EventCard = component$(
         </div>
 
         <div class="p-6 pt-0">
-          {!isPast ? (
+          <Button
+            look="primary"
+            class="bg-green-600 hover:bg-green-700 transition-colors"
+          >
+            <Link href={`/${currentLocale}/eventos/${evento.id}`}>
+              {_`Más información`}
+            </Link>
+          </Button>
+          {isPast && (
             <Button
               look="primary"
-              class="bg-green-600 hover:bg-green-700 transition-colors"
-            >
-              <Link href={`/${currentLocale}/eventos/${evento.id}`}>
-                {_`Más información`}
-              </Link>
-            </Button>
-          ) : (
-            <Button
-              look="primary"
-              class="bg-gray-300 text-gray-700 cursor-default"
+              class="bg-gray-300 text-gray-700 cursor-default ml-4"
               disabled
             >
               {_`Finalizado`}
@@ -475,7 +474,7 @@ export default component$(() => {
                 <div class="space-y-4">
                   {eventos.map((evento) => (
                     <div key={evento.id} class="flex gap-4 border-b pb-4">
-                      <div class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-md bg-gray-100">
+                      <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-gray-100">
                         <LuCalendar class="h-6 w-6 text-gray-600" />
                       </div>
                       <div class="flex-1">

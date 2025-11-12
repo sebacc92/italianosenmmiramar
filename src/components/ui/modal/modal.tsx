@@ -1,6 +1,6 @@
-import { component$, Slot, useStyles$, type Signal } from '@builder.io/qwik';
-import { Modal } from '@qwik-ui/headless';
-import styles from './modal.css?inline';
+import { component$, Slot, type Signal } from '@builder.io/qwik';
+import { Modal as HeadlessModal } from '@qwik-ui/headless';
+import { cn } from '@qwik-ui/utils';
 
 interface ModalProps {
   cancelButtonText?: string;
@@ -13,66 +13,70 @@ interface ModalProps {
   showSig?: Signal<boolean>;
 }
 
-export default component$<ModalProps>((props) => {
-  useStyles$(styles);
-  useStyles$(`
-    .modal-animation[open]::backdrop {
-      animation: backdropFadeIn 0.75s ease-in-out forwards;
-    }
-    @keyframes backdropFadeIn {
-      from { background-color: rgba(0,0,0,0); }
-      to   { background-color: rgba(0,0,0,0.65); }
-    }
-  `);
-
+export const Modal = component$<ModalProps>((props) => {
   return (
     <>
       {props.showSig ? (
-        <Modal.Root bind:show={props.showSig}>
-          <Modal.Trigger class={`${props.triggerClass || 'modal-trigger'}`}>
+        <HeadlessModal.Root bind:show={props.showSig}>
+          <HeadlessModal.Trigger class={cn(props.triggerClass || 'modal-trigger')}>
             {props.triggerText}
-          </Modal.Trigger>
+          </HeadlessModal.Trigger>
 
-          <Modal.Panel class="modal-panel modal-animation">
-            <Modal.Title>{props.title}</Modal.Title>
-            <Modal.Description>{props.description}</Modal.Description>
+          <HeadlessModal.Panel class="modal-panel modal-animation">
+            <HeadlessModal.Title class="modal-title">{props.title}</HeadlessModal.Title>
+            {props.description && (
+              <HeadlessModal.Description class="modal-description">
+                {props.description}
+              </HeadlessModal.Description>
+            )}
             <Slot />
             {props.showFooter && (
-              <footer class="mt-4">
-                <Modal.Close class="modal-close">
+              <footer class="modal-footer">
+                <HeadlessModal.Close class="modal-close">
                   {props.cancelButtonText || 'Cancelar'}
-                </Modal.Close>
-                <Modal.Close class="modal-close">
+                </HeadlessModal.Close>
+                <HeadlessModal.Close class="modal-close modal-close-primary">
                   {props.saveButtonText || 'Guardar cambios'}
-                </Modal.Close>
+                </HeadlessModal.Close>
               </footer>
             )}
-          </Modal.Panel>
-        </Modal.Root>
+          </HeadlessModal.Panel>
+        </HeadlessModal.Root>
       ) : (
-        <Modal.Root>
-          <Modal.Trigger class={`${props.triggerClass || 'modal-trigger'}`}>
+        <HeadlessModal.Root>
+          <HeadlessModal.Trigger class={cn(props.triggerClass || 'modal-trigger')}>
             {props.triggerText}
-          </Modal.Trigger>
+          </HeadlessModal.Trigger>
 
-          <Modal.Panel class="modal-panel modal-animation">
-            <Modal.Title>{props.title}</Modal.Title>
-            <Modal.Description>{props.description}</Modal.Description>
+          <HeadlessModal.Panel class="modal-panel modal-animation">
+            <HeadlessModal.Title class="modal-title">{props.title}</HeadlessModal.Title>
+            {props.description && (
+              <HeadlessModal.Description class="modal-description">
+                {props.description}
+              </HeadlessModal.Description>
+            )}
             <Slot />
             {props.showFooter && (
-              <footer class="mt-4">
-                <Modal.Close class="modal-close">
+              <footer class="modal-footer">
+                <HeadlessModal.Close class="modal-close">
                   {props.cancelButtonText || 'Cancelar'}
-                </Modal.Close>
-                <Modal.Close class="modal-close">
+                </HeadlessModal.Close>
+                <HeadlessModal.Close class="modal-close modal-close-primary">
                   {props.saveButtonText || 'Guardar cambios'}
-                </Modal.Close>
+                </HeadlessModal.Close>
               </footer>
             )}
-          </Modal.Panel>
-        </Modal.Root>
+          </HeadlessModal.Panel>
+        </HeadlessModal.Root>
       )}
     </>
   );
 });
 
+// Exportar también los componentes individuales para compatibilidad
+export const ModalRoot = HeadlessModal.Root;
+export const ModalTrigger = HeadlessModal.Trigger;
+export const ModalClose = HeadlessModal.Close;
+export const ModalPanel = HeadlessModal.Panel;
+export const ModalTitle = HeadlessModal.Title;
+export const ModalDescription = HeadlessModal.Description;

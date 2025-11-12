@@ -1,4 +1,15 @@
 export * from "./button/button";
 export * from "./card/card";
 export * from "./accordion/accordion";
-export { default as Modal } from "./modal/modal";
+export * from './badge/badge';
+export * from './button/button';
+export * from './card/card';
+export * from './modal/modal';
+export * from './input/input';
+export * from './label/label';
+export * from './popover/popover';
+export * from './select/select';
+export * from './separator/separator';
+export * from './textarea/textarea';
+export * from './toggle/toggle';
+export * from './tooltip/tooltip';

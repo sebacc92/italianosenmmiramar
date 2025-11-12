@@ -55,7 +55,7 @@ export default component$(() => {
           <div class="container mx-auto px-4">
             <div class="mx-auto max-w-3xl rounded-lg bg-white p-8 shadow-lg border border-blue-100">
               <div class="flex flex-col md:flex-row items-center gap-6">
-                <div class="flex-shrink-0 w-24 h-24 rounded-full bg-blue-100 flex items-center justify-center">
+                <div class="shrink-0 w-24 h-24 rounded-full bg-blue-100 flex items-center justify-center">
                   <LuUser class="h-12 w-12 text-blue-600" />
                 </div>
                 <div class="text-center md:text-left">
