@@ -10,174 +10,174 @@ const BASE_URL = import.meta.env.VITE_STRAPI_URL;
 
 // Tipo para evento de Strapi
 interface StrapiEvento {
-    id: number;
-    documentId: string;
-    titulo: string;
-    fecha: string;
-    lugar: string;
-    destacado: boolean;
-    description: string;
-    imagen_principal: {
-        url: string;
-        formats?: {
-            thumbnail?: { url: string; width?: number; height?: number };
-            small?: { url: string; width?: number; height?: number };
-            medium?: { url: string; width?: number; height?: number };
-            large?: { url: string; width?: number; height?: number };
-        };
-        width?: number;
-        height?: number;
-        alternativeText?: string | null;
-    } | null;
-    galeria?: Array<{
-        url: string;
-        formats?: {
-            thumbnail?: { url: string; width?: number; height?: number };
-            small?: { url: string; width?: number; height?: number };
-            medium?: { url: string; width?: number; height?: number };
-            large?: { url: string; width?: number; height?: number };
-        };
-    }> | null;
+  id: number;
+  documentId: string;
+  titulo: string;
+  fecha: string;
+  lugar: string;
+  destacado: boolean;
+  description: string;
+  imagen_principal: {
+    url: string;
+    formats?: {
+      thumbnail?: { url: string; width?: number; height?: number };
+      small?: { url: string; width?: number; height?: number };
+      medium?: { url: string; width?: number; height?: number };
+      large?: { url: string; width?: number; height?: number };
+    };
+    width?: number;
+    height?: number;
+    alternativeText?: string | null;
+  } | null;
+  galeria?: Array<{
+    url: string;
+    formats?: {
+      thumbnail?: { url: string; width?: number; height?: number };
+      small?: { url: string; width?: number; height?: number };
+      medium?: { url: string; width?: number; height?: number };
+      large?: { url: string; width?: number; height?: number };
+    };
+  }> | null;
 }
 
 // Función para formatear fecha en español
 function formatDate(fechaISO: string): string {
-    const fecha = new Date(fechaISO);
-    const diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
-    const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 
-                   'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-    
-    const diaSemana = diasSemana[fecha.getDay()];
-    const dia = fecha.getDate();
-    const mes = meses[fecha.getMonth()];
-    const hora = fecha.getHours();
-    const minutos = fecha.getMinutes();
-    
-    let dateStr = `${diaSemana} ${dia} de ${mes}`;
-    if (hora > 0 || minutos > 0) {
-        const horaStr = hora.toString().padStart(2, '0');
-        const minutosStr = minutos.toString().padStart(2, '0');
-        dateStr += ` - ${horaStr}:${minutosStr}hs`;
-    }
-    
-    return dateStr;
+  const fecha = new Date(fechaISO);
+  const diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+  const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+
+  const diaSemana = diasSemana[fecha.getDay()];
+  const dia = fecha.getDate();
+  const mes = meses[fecha.getMonth()];
+  const hora = fecha.getHours();
+  const minutos = fecha.getMinutes();
+
+  let dateStr = `${diaSemana} ${dia} de ${mes}`;
+  if (hora > 0 || minutos > 0) {
+    const horaStr = hora.toString().padStart(2, '0');
+    const minutosStr = minutos.toString().padStart(2, '0');
+    dateStr += ` - ${horaStr}:${minutosStr}hs`;
+  }
+
+  return dateStr;
 }
 
 // Función para obtener URL de imagen optimizada de Strapi
 function getStrapiImageUrl(imagen: StrapiEvento['imagen_principal'], size: 'thumbnail' | 'small' | 'medium' | 'large' | 'original' = 'large'): string | null {
-    if (!imagen) return null;
-    
-    const baseUrl = BASE_URL.replace(/\/$/, '');
-    const imageUrl = imagen.url.startsWith('http') ? imagen.url : `${baseUrl}${imagen.url}`;
-    
-    if (size !== 'original' && imagen.formats && imagen.formats[size]) {
-        const format = imagen.formats[size];
-        if (format) {
-            const formatUrl = format.url;
-            return formatUrl.startsWith('http') ? formatUrl : `${baseUrl}${formatUrl}`;
-        }
+  if (!imagen) return null;
+
+  const baseUrl = BASE_URL.replace(/\/$/, '');
+  const imageUrl = imagen.url.startsWith('http') ? imagen.url : `${baseUrl}${imagen.url}`;
+
+  if (size !== 'original' && imagen.formats && imagen.formats[size]) {
+    const format = imagen.formats[size];
+    if (format) {
+      const formatUrl = format.url;
+      return formatUrl.startsWith('http') ? formatUrl : `${baseUrl}${formatUrl}`;
     }
-    
-    return imageUrl;
+  }
+
+  return imageUrl;
 }
 
 // Función para generar srcset para imágenes responsivas
 function getStrapiImageSrcSet(imagen: StrapiEvento['imagen_principal']): string | null {
-    if (!imagen || !imagen.formats) return null;
-    
-    const baseUrl = BASE_URL.replace(/\/$/, '');
-    const srcset: string[] = [];
-    
-    if (imagen.formats.thumbnail) {
-        const thumbnail = imagen.formats.thumbnail;
-        const url = thumbnail.url.startsWith('http') ? thumbnail.url : `${baseUrl}${thumbnail.url}`;
-        const width = thumbnail.width || 156;
-        srcset.push(`${url} ${width}w`);
-    }
-    if (imagen.formats.small) {
-        const small = imagen.formats.small;
-        const url = small.url.startsWith('http') ? small.url : `${baseUrl}${small.url}`;
-        const width = small.width || 500;
-        srcset.push(`${url} ${width}w`);
-    }
-    if (imagen.formats.medium) {
-        const medium = imagen.formats.medium;
-        const url = medium.url.startsWith('http') ? medium.url : `${baseUrl}${medium.url}`;
-        const width = medium.width || 750;
-        srcset.push(`${url} ${width}w`);
-    }
-    if (imagen.formats.large) {
-        const large = imagen.formats.large;
-        const url = large.url.startsWith('http') ? large.url : `${baseUrl}${large.url}`;
-        const width = large.width || 1000;
-        srcset.push(`${url} ${width}w`);
-    }
-    
-    const originalUrl = imagen.url.startsWith('http') ? imagen.url : `${baseUrl}${imagen.url}`;
-    if (imagen.width) {
-        srcset.push(`${originalUrl} ${imagen.width}w`);
-    } else if (imagen.formats?.large?.width) {
-        const largeWidth = imagen.formats.large.width;
-        srcset.push(`${originalUrl} ${Math.round(largeWidth * 1.5)}w`);
-    } else {
-        srcset.push(`${originalUrl} 1920w`);
-    }
-    
-    return srcset.length > 0 ? srcset.join(', ') : null;
+  if (!imagen || !imagen.formats) return null;
+
+  const baseUrl = BASE_URL.replace(/\/$/, '');
+  const srcset: string[] = [];
+
+  if (imagen.formats.thumbnail) {
+    const thumbnail = imagen.formats.thumbnail;
+    const url = thumbnail.url.startsWith('http') ? thumbnail.url : `${baseUrl}${thumbnail.url}`;
+    const width = thumbnail.width || 156;
+    srcset.push(`${url} ${width}w`);
+  }
+  if (imagen.formats.small) {
+    const small = imagen.formats.small;
+    const url = small.url.startsWith('http') ? small.url : `${baseUrl}${small.url}`;
+    const width = small.width || 500;
+    srcset.push(`${url} ${width}w`);
+  }
+  if (imagen.formats.medium) {
+    const medium = imagen.formats.medium;
+    const url = medium.url.startsWith('http') ? medium.url : `${baseUrl}${medium.url}`;
+    const width = medium.width || 750;
+    srcset.push(`${url} ${width}w`);
+  }
+  if (imagen.formats.large) {
+    const large = imagen.formats.large;
+    const url = large.url.startsWith('http') ? large.url : `${baseUrl}${large.url}`;
+    const width = large.width || 1000;
+    srcset.push(`${url} ${width}w`);
+  }
+
+  const originalUrl = imagen.url.startsWith('http') ? imagen.url : `${baseUrl}${imagen.url}`;
+  if (imagen.width) {
+    srcset.push(`${originalUrl} ${imagen.width}w`);
+  } else if (imagen.formats?.large?.width) {
+    const largeWidth = imagen.formats.large.width;
+    srcset.push(`${originalUrl} ${Math.round(largeWidth * 1.5)}w`);
+  } else {
+    srcset.push(`${originalUrl} 1920w`);
+  }
+
+  return srcset.length > 0 ? srcset.join(', ') : null;
 }
 
 // RouteLoader para obtener un evento específico de Strapi
 export const useEvento = routeLoader$(async ({ params }) => {
-    const slug = params.slug;
-    
-    try {
-        // Buscar por documentId o id
-        const query = qs.stringify(
-          {
-            populate: '*',
-          },
-          { encodeValuesOnly: true }
-        );
-        
-        const res = await fetch(`${BASE_URL}/api/eventos/${slug}?${query}`);
-        if (!res.ok) {
-            throw new Error(`Failed to fetch evento from Strapi: ${res.status}`);
-        }
-        
-        const data = await res.json() as { data: StrapiEvento };
-        
-        console.log('data2', data);
-        if (!data.data) {
-            return null;
-        }
-        
-        const eventoStrapi = data.data;
-        const imageUrl = getStrapiImageUrl(eventoStrapi.imagen_principal, 'large');
-        const imageSrcSet = getStrapiImageSrcSet(eventoStrapi.imagen_principal);
-        
-        return {
-            id: eventoStrapi.documentId || eventoStrapi.id.toString(),
-            title: eventoStrapi.titulo,
-            date: formatDate(eventoStrapi.fecha),
-            description: eventoStrapi.description,
-            location: eventoStrapi.lugar,
-            image: imageUrl,
-            imageSrcSet: imageSrcSet,
-            imageAlt: eventoStrapi.imagen_principal?.alternativeText || eventoStrapi.titulo,
-            imageWidth: eventoStrapi.imagen_principal?.width || null,
-            imageHeight: eventoStrapi.imagen_principal?.height || null,
-            destacado: eventoStrapi.destacado,
-            galeria: eventoStrapi.galeria?.map(img => {
-                const baseUrl = BASE_URL.replace(/\/$/, '');
-                return {
-                    url: img.url.startsWith('http') ? img.url : `${baseUrl}${img.url}`
-                };
-            }),
-        };
-    } catch (error) {
-        console.error('Error fetching evento:', error);
-        return null;
+  const slug = params.slug;
+
+  try {
+    // Buscar por documentId o id
+    const query = qs.stringify(
+      {
+        populate: '*',
+      },
+      { encodeValuesOnly: true }
+    );
+
+    const res = await fetch(`${BASE_URL}/api/eventos/${slug}?${query}`);
+    if (!res.ok) {
+      throw new Error(`Failed to fetch evento from Strapi: ${res.status}`);
     }
+
+    const data = await res.json() as { data: StrapiEvento };
+
+    console.log('data2', data);
+    if (!data.data) {
+      return null;
+    }
+
+    const eventoStrapi = data.data;
+    const imageUrl = getStrapiImageUrl(eventoStrapi.imagen_principal, 'large');
+    const imageSrcSet = getStrapiImageSrcSet(eventoStrapi.imagen_principal);
+
+    return {
+      id: eventoStrapi.documentId || eventoStrapi.id.toString(),
+      title: eventoStrapi.titulo,
+      date: formatDate(eventoStrapi.fecha),
+      description: eventoStrapi.description,
+      location: eventoStrapi.lugar,
+      image: imageUrl,
+      imageSrcSet: imageSrcSet,
+      imageAlt: eventoStrapi.imagen_principal?.alternativeText || eventoStrapi.titulo,
+      imageWidth: eventoStrapi.imagen_principal?.width || null,
+      imageHeight: eventoStrapi.imagen_principal?.height || null,
+      destacado: eventoStrapi.destacado,
+      galeria: eventoStrapi.galeria?.map(img => {
+        const baseUrl = BASE_URL.replace(/\/$/, '');
+        return {
+          url: img.url.startsWith('http') ? img.url : `${baseUrl}${img.url}`
+        };
+      }),
+    };
+  } catch (error) {
+    console.error('Error fetching evento:', error);
+    return null;
+  }
 });
 
 export const useEventoConsulta = routeAction$(async (data, requestEvent) => {
@@ -272,8 +272,8 @@ export default component$(() => {
       <div class="container mx-auto px-4 max-w-6xl">
         {/* Botón volver */}
         <div class="mb-6">
-          <Link 
-            href={`/${currentLocale}/eventos`} 
+          <Link
+            href={`/${currentLocale}/eventos`}
             class="inline-flex items-center gap-2 text-green-600 hover:text-green-700 font-medium transition-colors group"
           >
             <LuArrowLeft class="h-4 w-4 transition-transform group-hover:-translate-x-1" />
@@ -287,10 +287,10 @@ export default component$(() => {
           <div class="w-full mb-8 md:mb-12">
             {evento.image ? (
               <div class="w-full flex justify-center items-center p-4 md:p-8">
-                <img 
-                  src={evento.image} 
+                <img
+                  src={evento.image}
                   srcset={evento.imageSrcSet || undefined}
-                  alt={evento.imageAlt || evento.title} 
+                  alt={evento.imageAlt || evento.title}
                   width={evento.imageWidth || 1200}
                   height={evento.imageHeight || 630}
                   class="max-w-full h-auto rounded-xl shadow-xl"
@@ -308,19 +308,21 @@ export default component$(() => {
               </div>
             )}
           </div>
-          
+
           {/* Galería si está disponible */}
           {evento.galeria && evento.galeria.length > 0 && (
             <div class="mb-8 px-6 md:px-12">
               <h3 class="text-xl font-semibold mb-4">{_`Galería`}</h3>
               <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
                 {evento.galeria.map((img, index) => (
-                  <img 
+                  <img
                     key={index}
-                    src={img.url} 
+                    src={img.url}
                     alt={`${evento.title} - ${index + 1}`}
                     class="w-full h-auto rounded-lg shadow-md hover:shadow-lg transition-shadow cursor-pointer"
                     loading="lazy"
+                    width={400}
+                    height={300}
                   />
                 ))}
               </div>
@@ -380,11 +382,10 @@ export default component$(() => {
 
       {/* Toast notification */}
       {toastMessage.value && (
-        <div class={`fixed bottom-4 right-4 z-50 p-4 rounded-lg shadow-lg ${
-          toastMessage.value.type === 'success' 
-            ? 'bg-green-600 text-white' 
+        <div class={`fixed bottom-4 right-4 z-50 p-4 rounded-lg shadow-lg ${toastMessage.value.type === 'success'
+            ? 'bg-green-600 text-white'
             : 'bg-red-600 text-white'
-        }`}>
+          }`}>
           <p>{toastMessage.value.message}</p>
         </div>
       )}
@@ -395,7 +396,7 @@ export default component$(() => {
 export const head: DocumentHead = ({ resolveValue, url }) => {
   const evento = resolveValue(useEvento);
   const siteName = "Mutual Cultural Círculo Italiano Joven Italia";
-  
+
   if (!evento) {
     return {
       title: _`Evento no encontrado - ${siteName}`,
@@ -411,7 +412,7 @@ export const head: DocumentHead = ({ resolveValue, url }) => {
   const baseUrl = url.origin;
   const pageUrl = url.href;
   const imageUrl = evento.image || `${baseUrl}/images/placeholder-evento.jpg`;
-  
+
   // Limpiar descripción para meta tags (remover markdown y emojis)
   const cleanDescription = evento.description
     .replace(/\*\*/g, '') // Remover markdown bold
@@ -420,9 +421,9 @@ export const head: DocumentHead = ({ resolveValue, url }) => {
     .replace(/>\s/g, '') // Remover markdown blockquotes
     .replace(/\n/g, ' ') // Remover saltos de línea
     .trim();
-  
-  const description = cleanDescription.length > 160 
-    ? cleanDescription.substring(0, 157) + '...' 
+
+  const description = cleanDescription.length > 160
+    ? cleanDescription.substring(0, 157) + '...'
     : cleanDescription;
 
   return {

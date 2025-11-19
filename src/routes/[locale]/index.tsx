@@ -1,13 +1,20 @@
 import { component$ } from "@builder.io/qwik";
 import { Link, routeLoader$, type DocumentHead } from "@builder.io/qwik-city";
 import { _, getLocale } from "compiled-i18n";
-import { LuCalendar, LuLanguages, LuFileText, LuMusic, LuApple, LuPalette, LuBrush, LuBuilding2 } from "@qwikest/icons/lucide";
+import { LuCalendar, LuLanguages, LuFileText, LuPalette, LuBuilding2, LuArrowRight, LuMapPin } from "@qwikest/icons/lucide";
 import HeroSlider from "~/components/HeroSlider/HeroSlider";
-import { Button, Card } from "~/components/ui";
+import { Button } from "~/components/ui";
 import ImageStory from "~/media/story.jpg?h=500&jsx";
-import qs from 'qs'
-
-const BASE_URL = import.meta.env.VITE_STRAPI_URL;
+import qs from 'qs';
+import {
+  BASE_URL,
+  type StrapiEvento,
+  type EventoFormateado,
+  formatDate,
+  absolutize,
+  getStrapiImageUrl,
+  getStrapiImageSrcSet
+} from "~/utils/strapi";
 
 const QUERY_HOME_PAGE = {
   populate: {
@@ -29,268 +36,322 @@ const QUERY_HOME_PAGE = {
 }
 
 export const useGetHomePage = routeLoader$(async () => {
-  const query = qs.stringify(QUERY_HOME_PAGE, { encodeValuesOnly: true });
-  console.log('query ', query)
-  const res = await fetch(`${BASE_URL}/api/home-page?${query}`);
-  if (!res.ok) throw new Error('Failed to fetch data from Strapi');
-  const data = await res.json() as any;
-  return data;
+  try {
+    const query = qs.stringify(QUERY_HOME_PAGE, { encodeValuesOnly: true });
+    const res = await fetch(`${BASE_URL}/api/home-page?${query}`);
+    if (!res.ok) throw new Error('Failed to fetch data from Strapi');
+    const data = await res.json() as any;
+    return data;
+  } catch (error) {
+    console.error("Error fetching home page data:", error);
+    return null;
+  }
 });
 
-export const useGetStrapiDataHomePage = routeLoader$(async () => {
-  const res = await fetch(`${BASE_URL}/api/home-page`);
-  if (!res.ok) throw new Error('Failed to fetch data from Strapi');
-  const data = await res.json() as any;
-  return data;
+export const useHomeEventos = routeLoader$(async () => {
+  try {
+    const query = qs.stringify(
+      {
+        populate: "*",
+        sort: ["fecha:desc"],
+        pagination: {
+          limit: 10 // Traemos un poco más para filtrar en cliente si es necesario, aunque idealmente filtraríamos en backend
+        }
+      },
+      { encodeValuesOnly: true }
+    );
+
+    const res = await fetch(`${BASE_URL}/api/eventos?${query}`);
+    if (!res.ok) {
+      throw new Error(`Failed to fetch eventos from Strapi: ${res.status}`);
+    }
+
+    const data = (await res.json()) as { data: StrapiEvento[] };
+
+    const eventosFormateados: EventoFormateado[] = data.data.map((evento) => {
+      const fechaObj = new Date(evento.fecha);
+      const imageUrl = getStrapiImageUrl(evento.imagen_principal, "medium");
+      const imageLargeUrl = getStrapiImageUrl(evento.imagen_principal, "large") || getStrapiImageUrl(evento.imagen_principal, "original");
+      const imageSrcSet = getStrapiImageSrcSet(evento.imagen_principal);
+      const imageThumb = getStrapiImageUrl(evento.imagen_principal, "thumbnail");
+
+      return {
+        id: evento.documentId || evento.id.toString(),
+        title: evento.titulo,
+        date: formatDate(evento.fecha),
+        dateObj: fechaObj,
+        description: evento.description,
+        location: evento.lugar,
+        image: imageUrl,
+        imageLarge: imageLargeUrl,
+        imageAlt: evento.imagen_principal?.alternativeText || evento.titulo,
+        imageSrcSet: imageSrcSet,
+        imageWidth: evento.imagen_principal?.width || null,
+        imageHeight: evento.imagen_principal?.height || null,
+        imageThumb,
+        destacado: evento.destacado,
+        galeria: evento.galeria?.map((img) => ({
+          url: absolutize(img.url),
+        })),
+      };
+    });
+
+    // Filtrar solo eventos futuros
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const eventosFuturos = eventosFormateados.filter(e => {
+      const fecha = new Date(e.dateObj);
+      fecha.setHours(0, 0, 0, 0);
+      return fecha >= today;
+    });
+
+    // Ordenar por fecha más próxima
+    eventosFuturos.sort((a, b) => a.dateObj.getTime() - b.dateObj.getTime());
+
+    return eventosFuturos.slice(0, 3);
+  } catch (error) {
+    console.error("Error fetching home eventos:", error);
+    return [];
+  }
 });
 
-// Fecha actual para filtrar eventos
-const today = new Date();
-today.setHours(0, 0, 0, 0); // Asegurar comparación solo por fecha
-
-// Filtrar solo eventos futuros
 export default component$(() => {
-  const signal = useGetStrapiDataHomePage()
-  console.log('signal ', signal.value)
-  const signalHomePage = useGetHomePage()
-  console.log('signalHomePage ', signalHomePage.value.data.sections[0])
+  const signalHomePage = useGetHomePage();
+  const homeEventos = useHomeEventos();
   const currentLocale = getLocale();
+
+  const heroData = signalHomePage.value?.data?.sections?.[0];
+  const title = heroData?.Titulo || _`Bienvenidos al Círculo Italiano`;
+  const subtitle = heroData?.Subtitulo || _`Un espacio de encuentro, cultura y tradición en Miramar`;
+
   return (
     <>
       <HeroSlider
-        description={signalHomePage.value.data.sections[0].Subtitulo}
-        title={signalHomePage.value.data.sections[0].Titulo}
+        description={subtitle}
+        title={title}
       />
 
-      {/* Services Section */}
-      <section class="py-16 md:py-20 bg-white">
-        <div class="container mx-auto px-4">
-          <div class="text-center mb-12">
-            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-3">
-              {_`Nuestros servicios`}
+      {/* Services Section - Redesigned */}
+      <section class="py-20 bg-white relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
+        <div class="container mx-auto px-4 relative z-10">
+          <div class="text-center mb-16">
+            <span class="text-green-600 font-bold tracking-wider uppercase text-sm mb-2 block">{_`Lo que hacemos`}</span>
+            <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4 font-serif">
+              {_`Nuestros Servicios`}
             </h2>
-            <p class="text-lg text-gray-600 max-w-3xl mx-auto">
-              {_`Descubre todo lo que el Círculo Italiano de Miramar tiene para ofrecerte`}
+            <div class="w-24 h-1 bg-gradient-to-r from-green-600 via-white to-red-600 mx-auto rounded-full mb-6"></div>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+              {_`Descubre todo lo que el Círculo Italiano de Miramar tiene para ofrecerte a ti y a tu familia.`}
             </p>
           </div>
-          <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-4 max-w-6xl mx-auto">
-            {/* Tarjeta Idiomas */}
-            <Card.Root class="transition duration-300 ease-in-out hover:shadow-xl border border-green-600 rounded-2xl bg-white/95 shadow-md hover:-translate-y-1 relative overflow-hidden text-center">
-              <div class="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-green-600 via-white to-red-600 rounded-t-2xl" />
-              <Card.Header class="flex flex-col items-center">
-                <div class="h-12 w-12 rounded-full bg-green-50 text-green-700 flex items-center justify-center shadow-sm mb-3">
-                  <LuLanguages class="h-6 w-6" />
+
+          <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-4 max-w-7xl mx-auto">
+            {/* Card 1: Idiomas */}
+            <Link href={`/${currentLocale}/clases`} class="group">
+              <div class="h-full bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 hover:border-green-200 hover:-translate-y-2 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-green-50 rounded-bl-full -mr-16 -mt-16 transition-transform group-hover:scale-110"></div>
+                <div class="relative z-10">
+                  <div class="w-14 h-14 bg-green-100 text-green-600 rounded-xl flex items-center justify-center mb-6 group-hover:bg-green-600 group-hover:text-white transition-colors">
+                    <LuLanguages class="w-7 h-7" />
+                  </div>
+                  <h3 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-green-700 transition-colors">{_`Idiomas`}</h3>
+                  <p class="text-gray-600 mb-6 leading-relaxed">{_`Aprende italiano e inglés con nuestros diferentes niveles y propuestas para todas las edades.`}</p>
+                  <span class="inline-flex items-center text-green-600 font-semibold group-hover:translate-x-1 transition-transform">
+                    {_`Ver clases`} <LuArrowRight class="ml-2 w-4 h-4" />
+                  </span>
                 </div>
-                <Card.Title class="text-xl text-gray-800 font-serif tracking-wide">{_`Idiomas`}</Card.Title>
-                <Card.Description class="text-gray-600">{_`Aprende italiano e inglés con nuestros diferentes niveles y propuestas para todas las edades.`}</Card.Description>
-              </Card.Header>
-              <Card.Footer class="flex gap-3 justify-center">
-                <Button class="bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-md transition-all border-2 border-green-700">
-                  <Link href={`/${currentLocale}/clases/italiano`} class="w-full">
-                    {_`Italiano`}
-                  </Link>
-                </Button>
-                <Button class="bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg shadow-md transition-all border-2 border-red-700">
-                  <Link href={`/${currentLocale}/clases/ingles`} class="w-full">
-                    {_`Inglés`}
-                  </Link>
-                </Button>
-              </Card.Footer>
-            </Card.Root>
-            {/* Tarjeta Eventos */}
-            <Card.Root class="transition duration-300 ease-in-out hover:shadow-xl border border-green-600 rounded-2xl bg-white/95 shadow-md hover:-translate-y-1 relative overflow-hidden text-center">
-              <div class="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-green-600 via-white to-red-600 rounded-t-2xl" />
-              <Card.Header class="flex flex-col items-center">
-                <div class="h-12 w-12 rounded-full bg-emerald-50 text-emerald-700 flex items-center justify-center shadow-sm mb-3">
-                  <LuCalendar class="h-6 w-6" />
+              </div>
+            </Link>
+
+            {/* Card 2: Ciudadanía */}
+            <Link href={`/${currentLocale}/tramites`} class="group">
+              <div class="h-full bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 hover:border-red-200 hover:-translate-y-2 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-red-50 rounded-bl-full -mr-16 -mt-16 transition-transform group-hover:scale-110"></div>
+                <div class="relative z-10">
+                  <div class="w-14 h-14 bg-red-100 text-red-600 rounded-xl flex items-center justify-center mb-6 group-hover:bg-red-600 group-hover:text-white transition-colors">
+                    <LuFileText class="w-7 h-7" />
+                  </div>
+                  <h3 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-red-700 transition-colors">{_`Ciudadanía`}</h3>
+                  <p class="text-gray-600 mb-6 leading-relaxed">{_`Asesoramiento y apoyo integral en los trámites para obtener la ciudadanía italiana.`}</p>
+                  <span class="inline-flex items-center text-red-600 font-semibold group-hover:translate-x-1 transition-transform">
+                    {_`Consultar`} <LuArrowRight class="ml-2 w-4 h-4" />
+                  </span>
                 </div>
-                <Card.Title class="text-xl text-gray-800 font-serif tracking-wide">{_`Eventos Culturales`}</Card.Title>
-                <Card.Description class="text-gray-600">{_`Exposiciones, muestras, charlas y eventos que promueven la cultura italiana.`}</Card.Description>
-              </Card.Header>
-              <Card.Footer class="flex justify-center">
-                <Button class="bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-md transition-all border-2 border-green-700">
-                  <Link href={`/${currentLocale}/eventos`} class="w-full">
-                    {_`Ver agenda`}
-                  </Link>
-                </Button>
-              </Card.Footer>
-            </Card.Root>
-            {/* Tarjeta Trámites */}
-            <Card.Root class="transition duration-300 ease-in-out hover:shadow-xl border border-green-600 rounded-2xl bg-white/95 shadow-md hover:-translate-y-1 relative overflow-hidden text-center">
-              <div class="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-green-600 via-white to-red-600 rounded-t-2xl" />
-              <Card.Header class="flex flex-col items-center">
-                <div class="h-12 w-12 rounded-full bg-red-50 text-red-600 flex items-center justify-center shadow-sm mb-3">
-                  <LuFileText class="h-6 w-6" />
+              </div>
+            </Link>
+
+            {/* Card 3: Cultura */}
+            <Link href={`/${currentLocale}/eventos`} class="group">
+              <div class="h-full bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 hover:border-green-200 hover:-translate-y-2 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-green-50 rounded-bl-full -mr-16 -mt-16 transition-transform group-hover:scale-110"></div>
+                <div class="relative z-10">
+                  <div class="w-14 h-14 bg-green-100 text-green-600 rounded-xl flex items-center justify-center mb-6 group-hover:bg-green-600 group-hover:text-white transition-colors">
+                    <LuPalette class="w-7 h-7" />
+                  </div>
+                  <h3 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-green-700 transition-colors">{_`Cultura y Arte`}</h3>
+                  <p class="text-gray-600 mb-6 leading-relaxed">{_`Exposiciones, talleres de arte, música y eventos que promueven nuestra herencia cultural.`}</p>
+                  <span class="inline-flex items-center text-green-600 font-semibold group-hover:translate-x-1 transition-transform">
+                    {_`Ver agenda`} <LuArrowRight class="ml-2 w-4 h-4" />
+                  </span>
                 </div>
-                <Card.Title class="text-xl text-gray-800 font-serif tracking-wide">{_`Trámites de Ciudadanía`}</Card.Title>
-                <Card.Description class="text-gray-600">{_`Asesoramiento y apoyo en los trámites para obtener la ciudadanía italiana.`}</Card.Description>
-              </Card.Header>
-              <Card.Footer class="flex justify-center">
-                <Button class="bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg shadow-md transition-all border-2 border-red-700">
-                  <Link href={`/${currentLocale}/tramites`} class="w-full">
-                    {_`Asesoría`}
-                  </Link>
-                </Button>
-              </Card.Footer>
-            </Card.Root>
-            {/* Tarjeta Danzas Ritmos Latinos */}
-            <Card.Root class="transition duration-300 ease-in-out hover:shadow-xl border border-green-600 rounded-2xl bg-white/95 shadow-md hover:-translate-y-1 relative overflow-hidden text-center">
-              <div class="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-green-600 via-white to-red-600 rounded-t-2xl" />
-              <Card.Header class="flex flex-col items-center">
-                <div class="h-12 w-12 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center shadow-sm mb-3">
-                  <LuMusic class="h-6 w-6" />
+              </div>
+            </Link>
+
+            {/* Card 4: Salones */}
+            <Link href={`/${currentLocale}/alquiler-salones`} class="group">
+              <div class="h-full bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 hover:border-gray-200 hover:-translate-y-2 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-gray-50 rounded-bl-full -mr-16 -mt-16 transition-transform group-hover:scale-110"></div>
+                <div class="relative z-10">
+                  <div class="w-14 h-14 bg-gray-100 text-gray-600 rounded-xl flex items-center justify-center mb-6 group-hover:bg-gray-600 group-hover:text-white transition-colors">
+                    <LuBuilding2 class="w-7 h-7" />
+                  </div>
+                  <h3 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-gray-700 transition-colors">{_`Salones`}</h3>
+                  <p class="text-gray-600 mb-6 leading-relaxed">{_`Espacios equipados y versátiles para tus reuniones, capacitaciones y celebraciones.`}</p>
+                  <span class="inline-flex items-center text-gray-600 font-semibold group-hover:translate-x-1 transition-transform">
+                    {_`Ver espacios`} <LuArrowRight class="ml-2 w-4 h-4" />
+                  </span>
                 </div>
-                <Card.Title class="text-xl text-gray-800 font-serif tracking-wide">{_`titulo_danzas_ritmos_en_accion`}</Card.Title>
-                <Card.Description class="text-gray-600">{_`Clases y talleres de danzas latinas para todas las edades. Vení a moverte y divertirte aprendiendo ritmos como salsa, bachata y más.`}</Card.Description>
-              </Card.Header>
-              <Card.Footer class="flex justify-center">
-                <Button class="bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-md transition-all border-2 border-green-700">
-                  <Link href={`/${currentLocale}/clases/danzas`} class="w-full">
-                    {_`Ver más`}
-                  </Link>
-                </Button>
-              </Card.Footer>
-            </Card.Root>
-            {/* Tarjeta Nutrición */}
-            <Card.Root class="transition duration-300 ease-in-out hover:shadow-xl border border-green-600 rounded-2xl bg-white/95 shadow-md hover:-translate-y-1 relative overflow-hidden text-center">
-              <div class="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-green-600 via-white to-red-600 rounded-t-2xl" />
-              <Card.Header class="flex flex-col items-center">
-                <div class="h-12 w-12 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center shadow-sm mb-3">
-                  <LuApple class="h-6 w-6" />
-                </div>
-                <Card.Title class="text-xl text-gray-800 font-serif tracking-wide">{_`Nutrición`}</Card.Title>
-                <Card.Description class="text-gray-600">{_`Charlas, talleres y asesoramiento sobre alimentación saludable y bienestar, a cargo de profesionales.`}</Card.Description>
-              </Card.Header>
-              <Card.Footer class="flex justify-center">
-                <Button class="bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg shadow-md transition-all border-2 border-red-700">
-                  <Link href={`/${currentLocale}/eventos`} class="w-full">
-                    {_`Próximas actividades`}
-                  </Link>
-                </Button>
-              </Card.Footer>
-            </Card.Root>
-            {/* Tarjeta Taller de Arte */}
-            <Card.Root class="transition duration-300 ease-in-out hover:shadow-xl border border-green-600 rounded-2xl bg-white/95 shadow-md hover:-translate-y-1 relative overflow-hidden text-center">
-              <div class="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-green-600 via-white to-red-600 rounded-t-2xl" />
-              <Card.Header class="flex flex-col items-center">
-                <div class="h-12 w-12 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center shadow-sm mb-3">
-                  <LuBrush class="h-6 w-6" />
-                </div>
-                <Card.Title class="text-xl text-gray-800 font-serif tracking-wide">{_`Taller de arte`}</Card.Title>
-                <Card.Description class="text-gray-600">{_`Espacio creativo para aprender distintas técnicas artísticas con profesores y artistas invitados.`}</Card.Description>
-              </Card.Header>
-              <Card.Footer class="flex justify-center">
-                <Button class="bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-md transition-all border-2 border-green-700">
-                  <Link href={`/${currentLocale}/eventos`} class="w-full">
-                    {_`Próximas actividades`}
-                  </Link>
-                </Button>
-              </Card.Footer>
-            </Card.Root>
-            {/* Tarjeta Exposición de obras */}
-            <Card.Root class="transition duration-300 ease-in-out hover:shadow-xl border border-green-600 rounded-2xl bg-white/95 shadow-md hover:-translate-y-1 relative overflow-hidden text-center">
-              <div class="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-green-600 via-white to-red-600 rounded-t-2xl" />
-              <Card.Header class="flex flex-col items-center">
-                <div class="h-12 w-12 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center shadow-sm mb-3">
-                  <LuPalette class="h-6 w-6" />
-                </div>
-                <Card.Title class="text-xl text-gray-800 font-serif tracking-wide">{_`Exposición de obras`}</Card.Title>
-                <Card.Description class="text-gray-600">{_`Espacio para artistas locales y regionales. Exhibiciones de pintura, fotografía y otras expresiones artísticas.`}</Card.Description>
-              </Card.Header>
-              <Card.Footer class="flex justify-center">
-                <Button class="bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-md transition-all border-2 border-green-700">
-                  <Link href={`/${currentLocale}/eventos`} class="w-full">
-                    {_`Ver exposiciones`}
-                  </Link>
-                </Button>
-              </Card.Footer>
-            </Card.Root>
-            {/* Tarjeta Alquiler de Salones */}
-            <Card.Root class="transition duration-300 ease-in-out hover:shadow-xl border border-green-600 rounded-2xl bg-white/95 shadow-md hover:-translate-y-1 relative overflow-hidden text-center">
-              <div class="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-green-600 via-white to-red-600 rounded-t-2xl" />
-              <Card.Header class="flex flex-col items-center">
-                <div class="h-12 w-12 rounded-full bg-slate-50 text-slate-600 flex items-center justify-center shadow-sm mb-3">
-                  <LuBuilding2 class="h-6 w-6" />
-                </div>
-                <Card.Title class="text-xl text-gray-800 font-serif tracking-wide">{_`Alquiler de salones`}</Card.Title>
-                <Card.Description class="text-gray-600">{_`Ofrecemos espacios equipados para reuniones, capacitaciones y celebraciones familiares.`}</Card.Description>
-              </Card.Header>
-              <Card.Footer class="flex justify-center">
-                <Button class="bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg shadow-md transition-all border-2 border-red-700">
-                  <Link href={`/${currentLocale}/contacto`} class="w-full">
-                    {_`Consultar disponibilidad`}
-                  </Link>
-                </Button>
-              </Card.Footer>
-            </Card.Root>
+              </div>
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* Próximos Eventos Section */}
-      <section class="py-16 md:py-20 bg-gray-50">
+      {/* Upcoming Events Section - Dynamic */}
+      <section class="py-20 bg-gray-50">
         <div class="container mx-auto px-4">
-          <div class="text-center mb-12">
-            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-3">
-              {_`Próximos Eventos`}
-            </h2>
-            <p class="text-lg text-gray-600 max-w-3xl mx-auto">
-              {_`No te pierdas nuestras próximas actividades culturales y sociales.`}
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* History Section */}
-      <section class="py-16 md:py-20 bg-gray-50">
-        <div class="container mx-auto px-4">
-          <div class="grid gap-12 md:grid-cols-2 items-center max-w-5xl mx-auto">
-            <div class="order-2 md:order-1 relative h-[350px] rounded-lg overflow-hidden shadow-md">
-              <ImageStory
-                class="absolute inset-0 w-full h-full object-cover"
-              />
+          <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+            <div class="text-left">
+              <span class="text-red-600 font-bold tracking-wider uppercase text-sm mb-2 block">{_`Agenda`}</span>
+              <h2 class="text-3xl md:text-4xl font-bold text-gray-900 font-serif">{_`Próximos Eventos`}</h2>
             </div>
-            <div class="order-1 md:order-2">
-              <h2 class="mb-4 text-3xl font-bold text-gray-800">{_`Nuestra Historia`}</h2>
-              <p class="mb-6 text-gray-700 text-lg leading-relaxed">
-                {_`Desde 1889, somos un pilar de la cultura italiana en Miramar. Nacimos para apoyar a los inmigrantes y hoy seguimos promoviendo el idioma, las tradiciones y el encuentro cultural. Con 136 años de historia, evolucionamos manteniendo nuestro corazón italiano.`}
-              </p>
-              <Button>
-                <Link href={`/${currentLocale}/nosotros`}>
-                  {_`Conoce más`}
+            <Link href={`/${currentLocale}/eventos`} class="hidden md:inline-flex items-center px-6 py-3 bg-white border border-gray-200 rounded-full text-gray-700 font-semibold hover:bg-green-600 hover:text-white hover:border-green-600 transition-all shadow-sm">
+              {_`Ver calendario completo`} <LuArrowRight class="ml-2 w-4 h-4" />
+            </Link>
+          </div>
+
+          <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3 max-w-7xl mx-auto">
+            {homeEventos.value.length > 0 ? (
+              homeEventos.value.map((evento) => (
+                <Link key={evento.id} href={`/${currentLocale}/eventos/${evento.id}`} class="group flex flex-col h-full bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                  <div class="relative h-56 overflow-hidden">
+                    <div class="absolute inset-0 bg-gray-200 animate-pulse"></div>
+                    {evento.image ? (
+                      <img
+                        src={evento.image}
+                        alt={evento.imageAlt || evento.title}
+                        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                        width={400}
+                        height={250}
+                      />
+                    ) : (
+                      <div class="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400">
+                        <LuCalendar class="w-12 h-12" />
+                      </div>
+                    )}
+                    <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-lg shadow-sm text-sm font-bold text-gray-800">
+                      {evento.date.split(' ')[0]} {evento.date.split(' ')[1]}
+                    </div>
+                  </div>
+                  <div class="p-6 flex-1 flex flex-col">
+                    <h3 class="text-xl font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-green-700 transition-colors">
+                      {evento.title}
+                    </h3>
+                    <div class="flex items-center text-gray-500 text-sm mb-4">
+                      <LuMapPin class="w-4 h-4 mr-1" />
+                      <span class="line-clamp-1">{evento.location}</span>
+                    </div>
+                    <p class="text-gray-600 line-clamp-3 mb-6 flex-1 text-sm leading-relaxed">
+                      {evento.description}
+                    </p>
+                    <span class="text-green-600 font-semibold text-sm flex items-center mt-auto">
+                      {_`Más información`} <LuArrowRight class="ml-1 w-4 h-4 transition-transform group-hover:translate-x-1" />
+                    </span>
+                  </div>
                 </Link>
-              </Button>
-            </div>
+              ))
+            ) : (
+              <div class="col-span-full text-center py-12 bg-white rounded-2xl border border-dashed border-gray-300">
+                <LuCalendar class="w-12 h-12 text-gray-300 mx-auto mb-4" />
+                <p class="text-gray-500">{_`No hay eventos próximos programados.`}</p>
+                <Link href={`/${currentLocale}/eventos`} class="text-green-600 font-semibold hover:underline mt-2 inline-block">
+                  {_`Ver eventos pasados`}
+                </Link>
+              </div>
+            )}
+          </div>
+
+          <div class="mt-8 text-center md:hidden">
+            <Link href={`/${currentLocale}/eventos`} class="inline-flex items-center px-6 py-3 bg-white border border-gray-200 rounded-full text-gray-700 font-semibold hover:bg-green-600 hover:text-white hover:border-green-600 transition-all shadow-sm">
+              {_`Ver calendario completo`} <LuArrowRight class="ml-2 w-4 h-4" />
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* Contact CTA Section */}
-      <section class="py-16 md:py-20 bg-gradient-to-r from-green-600/80 via-white to-red-600/80">
+      {/* History Section - Improved */}
+      <section class="py-20 bg-white">
         <div class="container mx-auto px-4">
-          <div class="mx-auto max-w-3xl rounded-lg bg-white p-10 shadow-lg border-2 border-green-600">
-            <div class="text-center">
-              <h2 class="mb-4 text-3xl md:text-4xl font-bold text-gray-800 font-serif tracking-wide">{_`¿Quieres formar parte?`}</h2>
-              <p class="mb-8 text-lg text-gray-600">
-                {_`Acércate a nuestra sede o contáctanos para conocer más sobre nuestras actividades, hacerte socio o presentar tu proyecto.`}
-              </p>
-              <div class="flex flex-wrap justify-center gap-4">
-                <div>
-                  <Link href={`/${currentLocale}/asociate`} class="w-full">
-                    <Button class="bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-md transition-all border-2 border-green-700">
-                      {_`Asociate`}
-                    </Button>
-                  </Link>
-                </div>
-                <div>
-                  <Link href={`/${currentLocale}/proyectos`} class="w-full">
-                    <Button class="bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg shadow-md transition-all border-2 border-red-700">
-                      {_`Presenta tu proyecto`}
-                    </Button>
-                  </Link>
+          <div class="grid gap-12 lg:grid-cols-2 items-center max-w-6xl mx-auto">
+            <div class="order-2 lg:order-1 relative">
+              <div class="absolute -inset-4 bg-gradient-to-tr from-green-100 to-red-100 rounded-full blur-3xl opacity-50"></div>
+              <div class="relative rounded-2xl overflow-hidden shadow-2xl transform rotate-1 hover:rotate-0 transition-transform duration-500">
+                <ImageStory class="w-full h-auto object-cover" />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                <div class="absolute bottom-6 left-6 text-white">
+                  <p class="font-bold text-lg">{_`Fundada en 1889`}</p>
+                  <p class="text-sm opacity-90">{_`Más de un siglo de historia`}</p>
                 </div>
               </div>
             </div>
+
+            <div class="order-1 lg:order-2">
+              <span class="text-green-600 font-bold tracking-wider uppercase text-sm mb-2 block">{_`Nuestra Historia`}</span>
+              <h2 class="text-4xl font-bold text-gray-900 mb-6 font-serif leading-tight">
+                {_`Preservando nuestras raíces, construyendo futuro`}
+              </h2>
+              <p class="text-lg text-gray-600 mb-6 leading-relaxed">
+                {_`Desde 1889, somos un pilar de la cultura italiana en Miramar. Nacimos para apoyar a los inmigrantes y hoy seguimos promoviendo el idioma, las tradiciones y el encuentro cultural.`}
+              </p>
+              <p class="text-gray-600 mb-8 leading-relaxed">
+                {_`Con 136 años de historia, evolucionamos manteniendo nuestro corazón italiano, ofreciendo un espacio abierto a toda la comunidad.`}
+              </p>
+              <Link href={`/${currentLocale}/nosotros`}>
+                <Button class="bg-gray-900 text-white hover:bg-gray-800 px-8 py-3 rounded-full shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
+                  {_`Conoce nuestra historia`}
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section - Premium */}
+      <section class="py-24 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-br from-green-800 via-green-900 to-gray-900"></div>
+        <div class="absolute inset-0 opacity-20 bg-[url('/images/pattern.png')]"></div>
+
+        <div class="container mx-auto px-4 relative z-10 text-center">
+          <h2 class="text-4xl md:text-5xl font-bold text-white mb-6 font-serif tracking-tight">
+            {_`¿Quieres formar parte?`}
+          </h2>
+          <p class="text-xl text-green-100 mb-10 max-w-2xl mx-auto leading-relaxed">
+            {_`Acércate a nuestra sede o contáctanos para conocer más sobre nuestras actividades, hacerte socio o presentar tu proyecto.`}
+          </p>
+
+          <div class="flex flex-col sm:flex-row justify-center gap-4">
+            <Link href={`/${currentLocale}/asociate`}>
+              <Button class="w-full sm:w-auto bg-white text-green-900 hover:bg-green-50 px-8 py-4 rounded-full font-bold text-lg shadow-xl transition-all transform hover:-translate-y-1">
+                {_`Quiero asociarme`}
+              </Button>
+            </Link>
+            <Link href={`/${currentLocale}/contacto`}>
+              <Button class="w-full sm:w-auto bg-transparent border-2 border-white text-white hover:bg-white/10 px-8 py-4 rounded-full font-bold text-lg transition-all">
+                {_`Contactar`}
+              </Button>
+            </Link>
           </div>
         </div>
       </section>

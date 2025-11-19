@@ -32,11 +32,11 @@ export default component$(() => {
                         <div class="mx-auto max-w-3xl">
                             <div class="relative overflow-hidden rounded-lg shadow-lg border border-gray-200">
                                 <div class="aspect-video">
-                                    <iframe 
+                                    <iframe
                                         class="absolute top-0 left-0 w-full h-full"
-                                        src="https://www.youtube.com/embed/R_BO4w1h7AE" 
+                                        src="https://www.youtube.com/embed/R_BO4w1h7AE"
                                         title={_`Historia del Círculo Italiano Joven Italia`}
-                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                         allowFullscreen
                                     ></iframe>
                                 </div>
@@ -68,6 +68,8 @@ export default component$(() => {
                                     src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-NiEgbBGLEnpWXV5RvzgV6n1MOyUvJo.png"
                                     alt={_`136 años Círculo Italiano`}
                                     class="object-contain h-full max-h-[350px] rounded-md shadow-md"
+                                    width={500}
+                                    height={350}
                                 />
                             </div>
                         </div>
@@ -119,7 +121,7 @@ export default component$(() => {
                                     </p>
                                 </div>
                             </div>
-                            
+
                             <div class="relative border-l-2 border-green-600 pl-10 pb-10">
                                 <div class="absolute -left-[11px] top-0 h-5 w-5 rounded-full bg-green-600 border-2 border-white"></div>
                                 <div class="mb-8">
@@ -233,7 +235,7 @@ export default component$(() => {
                                 </p>
                             </div>
 
-                             <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm transition duration-300 hover:shadow-md">
+                            <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm transition duration-300 hover:shadow-md">
                                 <div class="mb-4 h-12 w-12 rounded-full bg-green-100 flex items-center justify-center">
                                     <span class="text-2xl text-green-600">🌉</span>
                                 </div>
@@ -243,7 +245,7 @@ export default component$(() => {
                                 </p>
                             </div>
 
-                             <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm transition duration-300 hover:shadow-md">
+                            <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm transition duration-300 hover:shadow-md">
                                 <div class="mb-4 h-12 w-12 rounded-full bg-green-100 flex items-center justify-center">
                                     <span class="text-2xl text-green-600">🔄</span>
                                 </div>
@@ -253,7 +255,7 @@ export default component$(() => {
                                 </p>
                             </div>
 
-                           <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm transition duration-300 hover:shadow-md">
+                            <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm transition duration-300 hover:shadow-md">
                                 <div class="mb-4 h-12 w-12 rounded-full bg-green-100 flex items-center justify-center">
                                     <span class="text-2xl text-green-600">🤲</span>
                                 </div>
