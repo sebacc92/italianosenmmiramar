@@ -10,7 +10,7 @@ export interface StrapiEvento {
     lugar: string;
     destacado: boolean;
     description: string;
-    imagen_principal:
+    imagen:
     | {
         url: string;
         formats?: {
@@ -103,7 +103,7 @@ export function absolutize(url: string): string {
 }
 
 export function getStrapiImageUrl(
-    imagen: StrapiEvento["imagen_principal"],
+    imagen: StrapiEvento["imagen"],
     size:
         | "thumbnail"
         | "small"
@@ -126,7 +126,7 @@ export function getStrapiImageUrl(
 }
 
 export function getStrapiImageSrcSet(
-    imagen: StrapiEvento["imagen_principal"]
+    imagen: StrapiEvento["imagen"]
 ): string | null {
     if (!imagen) return null;
 

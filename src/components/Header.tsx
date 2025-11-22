@@ -56,10 +56,10 @@ export default component$(() => {
             </div>
             <div class="flex flex-col">
               <span class="text-sm font-bold leading-tight text-gray-900 md:text-lg lg:text-xl">
-                Círculo Italiano
+                Mutual Cultural Círculo
               </span>
-              <span class="text-[10px] font-medium uppercase tracking-wider text-green-700 md:text-xs">
-                Miramar • Joven Italia
+              <span class="text-sm font-medium uppercase tracking-wider md:text-xs">
+                Italiano Joven Italia
               </span>
             </div>
           </Link>
@@ -108,10 +108,10 @@ export default component$(() => {
                   {locales.map((locale) => (
                     <a
                       key={locale}
-                      href={`/${locale}${currentLocale === locale ? "" : `/${locale}`}`}
+                      href={`${currentLocale === locale ? "" : `/${locale}`}`}
                       class={`flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm transition-colors ${locale === currentLocale
-                          ? 'bg-green-50 text-green-700 font-medium'
-                          : 'text-gray-700 hover:bg-gray-50'
+                        ? 'bg-green-50 text-green-700 font-medium'
+                        : 'text-gray-700 hover:bg-gray-50'
                         }`}
                     >
                       {languageNames[locale]}
@@ -175,9 +175,9 @@ export default component$(() => {
 
                 <div class="mt-8 border-t pt-6">
                   <h3 class="mb-4 text-xs font-semibold uppercase tracking-wider text-gray-500">Contacto</h3>
-                  <a href="tel:2291451937" class="flex items-center gap-3 rounded-lg px-4 py-3 text-gray-700 hover:bg-gray-50">
+                  <a href="tel:2291433766" class="flex items-center gap-3 rounded-lg px-4 py-3 text-gray-700 hover:bg-gray-50">
                     <LuPhone class="h-5 w-5 text-green-600" />
-                    <span>2291 451937</span>
+                    <span>2291 433766</span>
                   </a>
                   <div class="mt-4 flex gap-4 px-4">
                     <a href="https://www.facebook.com/circuloitalianomiramar" class="rounded-full bg-blue-50 p-3 text-[#1877F2] transition-colors hover:bg-blue-100">

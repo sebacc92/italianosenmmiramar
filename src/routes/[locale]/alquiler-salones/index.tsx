@@ -38,14 +38,14 @@ export default component$(() => {
                 <h1 class="text-4xl md:text-5xl font-bold mb-4 text-center">{_`Alquiler de salones`}</h1>
                 <p class="text-xl text-center max-w-2xl">{_`Espacios ideales para sus eventos sociales, corporativos y culturales`}</p>
             </div>
-            
+
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
                 <div>
                     <h2 class="text-2xl font-bold text-gray-800 mb-4">{_`Rellene el formulario de contacto para reservar alguno de nuestros salones.`}</h2>
                     <p class="text-gray-600 mb-6">{_`Si necesita alquilar uno de nuestros elegantes salones para su evento o celebración, haga contacto con nuestro equipo. Le ofrecemos asesoramiento personalizado para hacer de su evento un momento inolvidable.`}</p>
-                    
+
                     <div class="salon-image mb-6 relative overflow-hidden rounded-lg shadow-2xl">
-                        <img 
+                        <img
                             src={imagenSalonSeleccionado.value}
                             alt={_`Salón seleccionado`}
                             width="1000"
@@ -87,30 +87,30 @@ export default component$(() => {
                         </ul>
                     </div>
                 </div>
-                
+
                 <div class="bg-white p-6 rounded-lg shadow-lg border border-gray-100">
                     <h3 class="text-xl font-bold text-center text-gray-800 mb-6 pb-3 border-b">{_`Solicitud de Reserva`}</h3>
                     <Form action={reservaAction} class="space-y-4">
                         <div>
                             <label for="nombre" class="block text-sm font-medium text-gray-700 mb-1">{_`Tu nombre *`}</label>
-                            <input 
-                                type="text" 
-                                id="nombre" 
-                                name="nombre" 
-                                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary" 
+                            <input
+                                type="text"
+                                id="nombre"
+                                name="nombre"
+                                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                                 required
                             />
                             {reservaAction.value?.fieldErrors?.nombre && (
                                 <p class="text-red-500 text-sm mt-1">{reservaAction.value.fieldErrors.nombre}</p>
                             )}
                         </div>
-                        
+
                         <div>
                             <label for="apellido" class="block text-sm font-medium text-gray-700 mb-1">{_`Tu apellido *`}</label>
-                            <input 
-                                type="text" 
-                                id="apellido" 
-                                name="apellido" 
+                            <input
+                                type="text"
+                                id="apellido"
+                                name="apellido"
                                 class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                                 required
                             />
@@ -118,13 +118,13 @@ export default component$(() => {
                                 <p class="text-red-500 text-sm mt-1">{reservaAction.value.fieldErrors.apellido}</p>
                             )}
                         </div>
-                        
+
                         <div>
                             <label for="email" class="block text-sm font-medium text-gray-700 mb-1">{_`Correo electrónico *`}</label>
-                            <input 
-                                type="email" 
-                                id="email" 
-                                name="email" 
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
                                 class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                                 required
                             />
@@ -132,16 +132,16 @@ export default component$(() => {
                                 <p class="text-red-500 text-sm mt-1">{reservaAction.value.fieldErrors.email}</p>
                             )}
                         </div>
-                        
+
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">{_`¿Qué salón te interesa alquilar? *`}</label>
                             <div class="space-y-3">
                                 <label class="flex items-center p-3 border rounded-md hover:bg-gray-50 transition cursor-pointer">
-                                    <input 
-                                        type="radio" 
-                                        name="salon" 
-                                        value="Salón Michael Angello (1er Piso - 280 personas)" 
-                                        class="mr-3 text-primary h-4 w-4" 
+                                    <input
+                                        type="radio"
+                                        name="salon"
+                                        value="Salón Michael Angello (1er Piso - 280 personas)"
+                                        class="mr-3 text-primary h-4 w-4"
                                         required
                                         onChange$={() => imagenSalonSeleccionado.value = salonGiuseppeVerdiSrc}
                                         checked
@@ -152,11 +152,11 @@ export default component$(() => {
                                     </div>
                                 </label>
                                 <label class="flex items-center p-3 border rounded-md hover:bg-gray-50 transition cursor-pointer">
-                                    <input 
-                                        type="radio" 
-                                        name="salon" 
-                                        value="Salón Guiseppe Verdi (2do Piso - 90 personas)" 
-                                        class="mr-3 text-primary h-4 w-4" 
+                                    <input
+                                        type="radio"
+                                        name="salon"
+                                        value="Salón Guiseppe Verdi (2do Piso - 90 personas)"
+                                        class="mr-3 text-primary h-4 w-4"
                                         required
                                         onChange$={() => imagenSalonSeleccionado.value = salonMichaelAngelloSrc}
                                     />
@@ -170,13 +170,13 @@ export default component$(() => {
                                 <p class="text-red-500 text-sm mt-1">{reservaAction.value.fieldErrors.salon}</p>
                             )}
                         </div>
-                        
+
                         <div>
                             <label for="mensaje" class="block text-sm font-medium text-gray-700 mb-1">{_`Introduce tu mensaje *`}</label>
-                            <textarea 
-                                id="mensaje" 
-                                name="mensaje" 
-                                rows={5} 
+                            <textarea
+                                id="mensaje"
+                                name="mensaje"
+                                rows={5}
                                 class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                                 placeholder={_`Describe tu evento, fecha deseada, servicios adicionales que necesitas...`}
                                 required
@@ -185,10 +185,10 @@ export default component$(() => {
                                 <p class="text-red-500 text-sm mt-1">{reservaAction.value.fieldErrors.mensaje}</p>
                             )}
                         </div>
-                        
+
                         <div>
-                            <button 
-                                type="submit" 
+                            <button
+                                type="submit"
                                 class="w-full bg-primary text-white py-3 px-4 rounded-md hover:bg-opacity-90 transition duration-200 flex items-center justify-center cursor-pointer"
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
@@ -214,11 +214,11 @@ export default component$(() => {
                     </Form>
                 </div>
             </div>
-            
+
             <div class="contact-info bg-gray-50 p-8 rounded-lg shadow-sm space-y-6 mb-12">
                 <h3 class="text-2xl font-bold text-center text-gray-800 mb-2">{_`Información de Contacto`}</h3>
                 <p class="text-center text-gray-600 mb-6">{_`También nos puede contactar de Lunes a Viernes de 10 a 17hs.`}</p>
-                
+
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <div class="bg-white p-5 rounded-lg shadow-sm flex flex-col items-center text-center">
                         <div class="bg-primary/10 p-3 rounded-full mb-4">
@@ -227,10 +227,10 @@ export default component$(() => {
                             </svg>
                         </div>
                         <h4 class="text-lg font-semibold mb-2">{_`Teléfono`}</h4>
-                        <p class="text-gray-700 mb-2">2291 451937</p>
-                        <a href="tel:2291451937" class="text-primary hover:underline text-sm">{_`Llamar ahora`}</a>
+                        <p class="text-gray-700 mb-2">2291 433766</p>
+                        <a href="tel:2291433766" class="text-primary hover:underline text-sm">{_`Llamar ahora`}</a>
                     </div>
-                    
+
                     <div class="bg-white p-5 rounded-lg shadow-sm flex flex-col items-center text-center">
                         <div class="bg-primary/10 p-3 rounded-full mb-4">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -241,7 +241,7 @@ export default component$(() => {
                         <p class="text-gray-700 mb-2 break-all">italianos@miramarense.com.ar</p>
                         <a href="mailto:italianos@miramarense.com.ar" class="text-primary hover:underline text-sm">{_`Enviar email`}</a>
                     </div>
-                    
+
                     <div class="bg-white p-5 rounded-lg shadow-sm flex flex-col items-center text-center">
                         <div class="bg-primary/10 p-3 rounded-full mb-4">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -255,15 +255,15 @@ export default component$(() => {
                     </div>
                 </div>
             </div>
-            
+
             {/* Gallery section with our salons */}
             <div class="salon-gallery mt-10 mb-12">
                 <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">{_`Nuestros Salones`}</h2>
-                
+
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div class="salon-card bg-white rounded-lg overflow-hidden shadow-lg">
                         <div class="salon-image h-64 sm:h-80 overflow-hidden">
-                            <img 
+                            <img
                                 src={salonGiuseppeVerdiSrc}
                                 alt={_`Salón Michael Angello`}
                                 width="1350"
@@ -291,10 +291,10 @@ export default component$(() => {
                             <button class="w-full bg-white border border-primary text-primary font-medium py-2 rounded-md hover:bg-primary hover:text-white transition duration-200 cursor-pointer">{_`Más información`}</button>
                         </div>
                     </div>
-                    
+
                     <div class="salon-card bg-white rounded-lg overflow-hidden shadow-lg">
                         <div class="salon-image h-64 sm:h-80 overflow-hidden">
-                            <img 
+                            <img
                                 src={salonMichaelAngelloSrc}
                                 alt={_`Salón Guiseppe Verdi`}
                                 width="1350"
@@ -327,18 +327,18 @@ export default component$(() => {
 
             <div class="bg-gray-50 p-8 rounded-lg">
                 <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">{_`Preguntas Frecuentes`}</h2>
-                
+
                 <div class="space-y-4">
                     <div class="bg-white p-5 rounded-lg shadow-sm">
                         <h4 class="text-lg font-semibold mb-2">{_`¿Cómo puedo reservar un salón?`}</h4>
                         <p class="text-gray-600">{_`Puede realizar una reserva completando el formulario en esta página, llamándonos directamente o visitando nuestra secretaría. Le recomendamos reservar con al menos 2 meses de anticipación.`}</p>
                     </div>
-                    
+
                     <div class="bg-white p-5 rounded-lg shadow-sm">
                         <h4 class="text-lg font-semibold mb-2">{_`¿Ofrecen servicio de catering?`}</h4>
                         <p class="text-gray-600">{_`Contamos con una lista de proveedores de catering recomendados, pero también puede traer su propio servicio. Consulte por nuestras opciones de menú italiano tradicional.`}</p>
                     </div>
-                    
+
                     <div class="bg-white p-5 rounded-lg shadow-sm">
                         <h4 class="text-lg font-semibold mb-2">{_`¿Qué instalaciones y equipamiento incluyen?`}</h4>
                         <p class="text-gray-600">{_`Nuestros salones incluyen sistema de sonido básico, proyector, mesas y sillas. Por un costo adicional puede solicitar iluminación especial, decoración y equipamiento audiovisual avanzado.`}</p>

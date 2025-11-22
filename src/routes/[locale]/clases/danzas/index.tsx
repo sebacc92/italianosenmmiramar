@@ -230,19 +230,19 @@ const Gallery = component$(() => {
   const images = Array.from({ length: 55 }, (_, i) => i + 1);
   const visibleCount = useSignal(10);
   const selectedImage = useSignal<number | null>(null);
-  
+
   const showMore = $(() => {
     visibleCount.value = Math.min(visibleCount.value + 10, 55);
   });
-  
+
   const openModal = $((num: number) => {
     selectedImage.value = num;
   });
-  
+
   const closeModal = $(() => {
     selectedImage.value = null;
   });
-  
+
   return (
     <section class="py-20 bg-background">
       <div class="container mx-auto px-4">
@@ -262,7 +262,7 @@ const Gallery = component$(() => {
             </div>
           ))}
         </div>
-        
+
         {visibleCount.value < 55 && (
           <div class="text-center mt-12">
             <Button look="outline" class="px-8 py-3" onClick$={showMore}>
@@ -270,7 +270,7 @@ const Gallery = component$(() => {
             </Button>
           </div>
         )}
-        
+
         {/* Modal */}
         {selectedImage.value && (
           <div
@@ -303,7 +303,7 @@ const Schedule = component$(() => {
   const selectedClass = useSignal<ScheduleItem | null>(null);
   const onClose = $(() => (selectedClass.value = null));
   const expandedDays = useSignal<Set<string>>(new Set());
-  
+
   const toggleDay = $((day: string) => {
     const newExpanded = new Set(expandedDays.value);
     if (newExpanded.has(day)) {
@@ -326,43 +326,43 @@ const Schedule = component$(() => {
           {dayOrder.map((day) => {
             const classes = scheduleData[day] || [];
             return (
-            <Card.Root key={day} class="bg-green-100/70 rounded-xl p-3">
-              <Card.Header class="pb-3">
-                <Card.Title class="text-center text-base font-bold text-white bg-primary py-2 rounded-lg">
-                  {dayNames[day]}
-                </Card.Title>
-              </Card.Header>
-              <Card.Content class="space-y-2">
-                {classes.map((classItem) => (
-                  <button
-                    key={classItem.id}
-                    class={`w-full text-left p-3 rounded-lg leading-tight shadow-sm ${typeClasses[classItem.type]}`}
-                    onClick$={() => (selectedClass.value = classItem)}
-                  >
-                    <div class="text-sm font-semibold mb-1">{classItem.name}</div>
-                    <div class="text-xs opacity-90 flex items-center gap-1">
-                      <LuClock class="w-3 h-3" />
-                      {classItem.time}
-                    </div>
-                    <div class="text-xs opacity-90 flex items-center gap-1 mt-1">
-                      <LuMapPin class="w-3 h-3" />
-                      {classItem.room}
-                    </div>
-                    {classItem.ageGroup && (
-                      <div class="text-xs opacity-90 flex items-center gap-1 mt-1">
-                        <LuUsers class="w-3 h-3" />
-                        {classItem.ageGroup}
+              <Card.Root key={day} class="bg-green-100/70 rounded-xl p-3">
+                <Card.Header class="pb-3">
+                  <Card.Title class="text-center text-base font-bold text-white bg-primary py-2 rounded-lg">
+                    {dayNames[day]}
+                  </Card.Title>
+                </Card.Header>
+                <Card.Content class="space-y-2">
+                  {classes.map((classItem) => (
+                    <button
+                      key={classItem.id}
+                      class={`w-full text-left p-3 rounded-lg leading-tight shadow-sm ${typeClasses[classItem.type]}`}
+                      onClick$={() => (selectedClass.value = classItem)}
+                    >
+                      <div class="text-sm font-semibold mb-1">{classItem.name}</div>
+                      <div class="text-xs opacity-90 flex items-center gap-1">
+                        <LuClock class="w-3 h-3" />
+                        {classItem.time}
                       </div>
-                    )}
-                    {classItem.level && (
-                      <span class="inline-block mt-1 text-[10px] px-2 py-0.5 rounded bg-white/85 text-black">
-                        {classItem.level}
-                      </span>
-                    )}
-                  </button>
-                ))}
-              </Card.Content>
-            </Card.Root>
+                      <div class="text-xs opacity-90 flex items-center gap-1 mt-1">
+                        <LuMapPin class="w-3 h-3" />
+                        {classItem.room}
+                      </div>
+                      {classItem.ageGroup && (
+                        <div class="text-xs opacity-90 flex items-center gap-1 mt-1">
+                          <LuUsers class="w-3 h-3" />
+                          {classItem.ageGroup}
+                        </div>
+                      )}
+                      {classItem.level && (
+                        <span class="inline-block mt-1 text-[10px] px-2 py-0.5 rounded bg-white/85 text-black">
+                          {classItem.level}
+                        </span>
+                      )}
+                    </button>
+                  ))}
+                </Card.Content>
+              </Card.Root>
             );
           })}
         </div>
@@ -372,43 +372,43 @@ const Schedule = component$(() => {
           {dayOrder.map((day) => {
             const classes = scheduleData[day] || [];
             return (
-            <Card.Root key={day} class="bg-green-100/70 rounded-xl p-3">
-              <Card.Header class="pb-3">
-                <Card.Title class="text-center text-sm font-bold text-white bg-primary py-2 rounded-lg">
-                  {dayNames[day]}
-                </Card.Title>
-              </Card.Header>
-              <Card.Content class="space-y-2">
-                {classes.map((classItem) => (
-                  <button
-                    key={classItem.id}
-                    class={`w-full text-left p-2 rounded-lg leading-tight shadow-sm ${typeClasses[classItem.type]}`}
-                    onClick$={() => (selectedClass.value = classItem)}
-                  >
-                    <div class="text-xs font-semibold mb-1">{classItem.name}</div>
-                    <div class="text-[10px] opacity-90 flex items-center gap-1">
-                      <LuClock class="w-2 h-2" />
-                      {classItem.time}
-                    </div>
-                    <div class="text-[10px] opacity-90 flex items-center gap-1 mt-1">
-                      <LuMapPin class="w-2 h-2" />
-                      {classItem.room}
-                    </div>
-                    {classItem.ageGroup && (
-                      <div class="text-[10px] opacity-90 flex items-center gap-1 mt-1">
-                        <LuUsers class="w-2 h-2" />
-                        {classItem.ageGroup}
+              <Card.Root key={day} class="bg-green-100/70 rounded-xl p-3">
+                <Card.Header class="pb-3">
+                  <Card.Title class="text-center text-sm font-bold text-white bg-primary py-2 rounded-lg">
+                    {dayNames[day]}
+                  </Card.Title>
+                </Card.Header>
+                <Card.Content class="space-y-2">
+                  {classes.map((classItem) => (
+                    <button
+                      key={classItem.id}
+                      class={`w-full text-left p-2 rounded-lg leading-tight shadow-sm ${typeClasses[classItem.type]}`}
+                      onClick$={() => (selectedClass.value = classItem)}
+                    >
+                      <div class="text-xs font-semibold mb-1">{classItem.name}</div>
+                      <div class="text-[10px] opacity-90 flex items-center gap-1">
+                        <LuClock class="w-2 h-2" />
+                        {classItem.time}
                       </div>
-                    )}
-                    {classItem.level && (
-                      <span class="inline-block mt-1 text-[8px] px-1 py-0.5 rounded bg-white/85 text-black">
-                        {classItem.level}
-                      </span>
-                    )}
-                  </button>
-                ))}
-              </Card.Content>
-            </Card.Root>
+                      <div class="text-[10px] opacity-90 flex items-center gap-1 mt-1">
+                        <LuMapPin class="w-2 h-2" />
+                        {classItem.room}
+                      </div>
+                      {classItem.ageGroup && (
+                        <div class="text-[10px] opacity-90 flex items-center gap-1 mt-1">
+                          <LuUsers class="w-2 h-2" />
+                          {classItem.ageGroup}
+                        </div>
+                      )}
+                      {classItem.level && (
+                        <span class="inline-block mt-1 text-[8px] px-1 py-0.5 rounded bg-white/85 text-black">
+                          {classItem.level}
+                        </span>
+                      )}
+                    </button>
+                  ))}
+                </Card.Content>
+              </Card.Root>
             );
           })}
         </div>

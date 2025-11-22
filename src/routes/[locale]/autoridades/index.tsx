@@ -1,8 +1,7 @@
-import { component$, useSignal } from "@builder.io/qwik";
+import { component$ } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
 import { routeLoader$ } from "@builder.io/qwik-city";
 import { _ } from "compiled-i18n";
-import qs from "qs";
 
 const BASE_URL = import.meta.env.VITE_STRAPI_URL;
 
@@ -10,7 +9,7 @@ const BASE_URL = import.meta.env.VITE_STRAPI_URL;
 interface StrapiAutoridad {
     id: number;
     documentId: string;
-    nombre: string;
+    nombre_completo: string;
     cargo: string;
     categoria: "consejo_directivo" | "tribunal_honor" | "presidente_honorario";
     orden: number;
@@ -40,16 +39,9 @@ function absolutize(url: string): string {
 // Loader
 export const useAutoridades = routeLoader$(async () => {
     try {
-        const query = qs.stringify(
-            {
-                populate: "*",
-                sort: ["orden:asc", "nombre:asc"],
-                pagination: { pageSize: 100 },
-            },
-            { encodeValuesOnly: true }
-        );
 
-        const res = await fetch(`${BASE_URL}/api/autoridades?${query}`);
+        const res = await fetch(`${BASE_URL}/api/autoridades`);
+        console.log('res', res);
 
         // Fallback si no existe el endpoint o falla
         if (!res.ok) {
@@ -65,7 +57,7 @@ export const useAutoridades = routeLoader$(async () => {
 
         return data.data.map((a) => ({
             id: a.documentId || a.id.toString(),
-            nombre: a.nombre,
+            nombre: a.nombre_completo,
             cargo: a.cargo,
             categoria: a.categoria,
             foto: a.foto ? absolutize(a.foto.formats?.small?.url || a.foto.url) : null,
@@ -128,7 +120,7 @@ export default component$(() => {
                     <p class="mx-auto max-w-2xl text-xl text-white/90 font-medium">
                         {_`Consejo Directivo del Círculo Italiano`}
                     </p>
-                    <p class="mt-2 text-sm text-white/80 uppercase tracking-wider">{_`Período 2023-2024`}</p>
+                    <p class="mt-2 text-sm text-white/80 uppercase tracking-wider">{_`Período 2025-2026`}</p>
                 </div>
             </section>
 

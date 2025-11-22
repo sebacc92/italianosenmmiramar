@@ -5,7 +5,8 @@ import { LuCalendar, LuLanguages, LuFileText, LuPalette, LuBuilding2, LuArrowRig
 import HeroSlider from "~/components/HeroSlider/HeroSlider";
 import { Button } from "~/components/ui";
 import ImageStory from "~/media/story.jpg?h=500&jsx";
-import qs from 'qs';
+import { stringify } from 'qs';
+
 import {
   BASE_URL,
   type StrapiEvento,
@@ -22,7 +23,7 @@ const QUERY_HOME_PAGE = {
       on: {
         "layout.hero-section": {
           populate: {
-            imagen: {
+            imagenes: {
               fields: ["url", "alternativeText"],
             },
             link: {
@@ -37,8 +38,8 @@ const QUERY_HOME_PAGE = {
 
 export const useGetHomePage = routeLoader$(async () => {
   try {
-    const query = qs.stringify(QUERY_HOME_PAGE, { encodeValuesOnly: true });
-    const res = await fetch(`${BASE_URL}/api/home-page?${query}`);
+    const query = stringify(QUERY_HOME_PAGE, { encodeValuesOnly: true });
+    const res = await fetch(`${BASE_URL}/api/home-page`);
     if (!res.ok) throw new Error('Failed to fetch data from Strapi');
     const data = await res.json() as any;
     return data;
@@ -50,7 +51,7 @@ export const useGetHomePage = routeLoader$(async () => {
 
 export const useHomeEventos = routeLoader$(async () => {
   try {
-    const query = qs.stringify(
+    const query = stringify(
       {
         populate: "*",
         sort: ["fecha:desc"],
@@ -70,10 +71,10 @@ export const useHomeEventos = routeLoader$(async () => {
 
     const eventosFormateados: EventoFormateado[] = data.data.map((evento) => {
       const fechaObj = new Date(evento.fecha);
-      const imageUrl = getStrapiImageUrl(evento.imagen_principal, "medium");
-      const imageLargeUrl = getStrapiImageUrl(evento.imagen_principal, "large") || getStrapiImageUrl(evento.imagen_principal, "original");
-      const imageSrcSet = getStrapiImageSrcSet(evento.imagen_principal);
-      const imageThumb = getStrapiImageUrl(evento.imagen_principal, "thumbnail");
+      const imageUrl = getStrapiImageUrl(evento.imagen, "medium");
+      const imageLargeUrl = getStrapiImageUrl(evento.imagen, "large") || getStrapiImageUrl(evento.imagen, "original");
+      const imageSrcSet = getStrapiImageSrcSet(evento.imagen);
+      const imageThumb = getStrapiImageUrl(evento.imagen, "thumbnail");
 
       return {
         id: evento.documentId || evento.id.toString(),
@@ -84,10 +85,10 @@ export const useHomeEventos = routeLoader$(async () => {
         location: evento.lugar,
         image: imageUrl,
         imageLarge: imageLargeUrl,
-        imageAlt: evento.imagen_principal?.alternativeText || evento.titulo,
+        imageAlt: evento.imagen?.alternativeText || evento.titulo,
         imageSrcSet: imageSrcSet,
-        imageWidth: evento.imagen_principal?.width || null,
-        imageHeight: evento.imagen_principal?.height || null,
+        imageWidth: evento.imagen?.width || null,
+        imageHeight: evento.imagen?.height || null,
         imageThumb,
         destacado: evento.destacado,
         galeria: evento.galeria?.map((img) => ({
@@ -122,8 +123,8 @@ export default component$(() => {
   const currentLocale = getLocale();
 
   const heroData = signalHomePage.value?.data?.sections?.[0];
-  const title = heroData?.Titulo || _`Bienvenidos al Círculo Italiano`;
-  const subtitle = heroData?.Subtitulo || _`Un espacio de encuentro, cultura y tradición en Miramar`;
+  const title = heroData?.titulo || _`Bienvenidos al Círculo Italiano`;
+  const subtitle = heroData?.subtitulo || _`Un espacio de encuentro, cultura y tradición en Miramar`;
 
   return (
     <>

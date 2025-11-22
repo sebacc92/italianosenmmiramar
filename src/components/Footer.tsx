@@ -134,7 +134,7 @@ export default component$(() => {
                             </li>
                             <li class="flex items-center gap-3 text-gray-400">
                                 <LuPhone class="h-5 w-5 text-white shrink-0" />
-                                <a href="tel:2291451937" class="hover:text-white transition-colors">2291 451937</a>
+                                <a href="tel:2291433766" class="hover:text-white transition-colors">2291 433766</a>
                             </li>
                             <li class="flex items-center gap-3 text-gray-400">
                                 <LuMail class="h-5 w-5 text-red-500 shrink-0" />

@@ -17,7 +17,7 @@ interface StrapiEvento {
   lugar: string;
   destacado: boolean;
   description: string;
-  imagen_principal: {
+  imagen: {
     url: string;
     formats?: {
       thumbnail?: { url: string; width?: number; height?: number };
@@ -64,7 +64,7 @@ function formatDate(fechaISO: string): string {
 }
 
 // Función para obtener URL de imagen optimizada de Strapi
-function getStrapiImageUrl(imagen: StrapiEvento['imagen_principal'], size: 'thumbnail' | 'small' | 'medium' | 'large' | 'original' = 'large'): string | null {
+function getStrapiImageUrl(imagen: StrapiEvento['imagen'], size: 'thumbnail' | 'small' | 'medium' | 'large' | 'original' = 'large'): string | null {
   if (!imagen) return null;
 
   const baseUrl = BASE_URL.replace(/\/$/, '');
@@ -82,7 +82,7 @@ function getStrapiImageUrl(imagen: StrapiEvento['imagen_principal'], size: 'thum
 }
 
 // Función para generar srcset para imágenes responsivas
-function getStrapiImageSrcSet(imagen: StrapiEvento['imagen_principal']): string | null {
+function getStrapiImageSrcSet(imagen: StrapiEvento['imagen']): string | null {
   if (!imagen || !imagen.formats) return null;
 
   const baseUrl = BASE_URL.replace(/\/$/, '');
@@ -152,8 +152,8 @@ export const useEvento = routeLoader$(async ({ params }) => {
     }
 
     const eventoStrapi = data.data;
-    const imageUrl = getStrapiImageUrl(eventoStrapi.imagen_principal, 'large');
-    const imageSrcSet = getStrapiImageSrcSet(eventoStrapi.imagen_principal);
+    const imageUrl = getStrapiImageUrl(eventoStrapi.imagen, 'large');
+    const imageSrcSet = getStrapiImageSrcSet(eventoStrapi.imagen);
 
     return {
       id: eventoStrapi.documentId || eventoStrapi.id.toString(),
@@ -163,9 +163,9 @@ export const useEvento = routeLoader$(async ({ params }) => {
       location: eventoStrapi.lugar,
       image: imageUrl,
       imageSrcSet: imageSrcSet,
-      imageAlt: eventoStrapi.imagen_principal?.alternativeText || eventoStrapi.titulo,
-      imageWidth: eventoStrapi.imagen_principal?.width || null,
-      imageHeight: eventoStrapi.imagen_principal?.height || null,
+      imageAlt: eventoStrapi.imagen?.alternativeText || eventoStrapi.titulo,
+      imageWidth: eventoStrapi.imagen?.width || null,
+      imageHeight: eventoStrapi.imagen?.height || null,
       destacado: eventoStrapi.destacado,
       galeria: eventoStrapi.galeria?.map(img => {
         const baseUrl = BASE_URL.replace(/\/$/, '');
@@ -383,8 +383,8 @@ export default component$(() => {
       {/* Toast notification */}
       {toastMessage.value && (
         <div class={`fixed bottom-4 right-4 z-50 p-4 rounded-lg shadow-lg ${toastMessage.value.type === 'success'
-            ? 'bg-green-600 text-white'
-            : 'bg-red-600 text-white'
+          ? 'bg-green-600 text-white'
+          : 'bg-red-600 text-white'
           }`}>
           <p>{toastMessage.value.message}</p>
         </div>

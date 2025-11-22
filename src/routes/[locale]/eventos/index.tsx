@@ -36,13 +36,13 @@ export const useEventos = routeLoader$(async () => {
     // Mapear eventos de Strapi al formato que necesitamos
     const eventosFormateados: EventoFormateado[] = data.data.map((evento) => {
       const fechaObj = new Date(evento.fecha);
-      const imageUrl = getStrapiImageUrl(evento.imagen_principal, "medium");
+      const imageUrl = getStrapiImageUrl(evento.imagen, "medium");
       const imageLargeUrl =
-        getStrapiImageUrl(evento.imagen_principal, "large") ||
-        getStrapiImageUrl(evento.imagen_principal, "original");
-      const imageSrcSet = getStrapiImageSrcSet(evento.imagen_principal);
+        getStrapiImageUrl(evento.imagen, "large") ||
+        getStrapiImageUrl(evento.imagen, "original");
+      const imageSrcSet = getStrapiImageSrcSet(evento.imagen);
       const imageThumb = getStrapiImageUrl(
-        evento.imagen_principal,
+        evento.imagen,
         "thumbnail"
       );
 
@@ -55,10 +55,10 @@ export const useEventos = routeLoader$(async () => {
         location: evento.lugar,
         image: imageUrl,
         imageLarge: imageLargeUrl,
-        imageAlt: evento.imagen_principal?.alternativeText || evento.titulo,
+        imageAlt: evento.imagen?.alternativeText || evento.titulo,
         imageSrcSet: imageSrcSet,
-        imageWidth: evento.imagen_principal?.width || null,
-        imageHeight: evento.imagen_principal?.height || null,
+        imageWidth: evento.imagen?.width || null,
+        imageHeight: evento.imagen?.height || null,
         imageThumb,
         destacado: evento.destacado,
         galeria: evento.galeria?.map((img) => ({

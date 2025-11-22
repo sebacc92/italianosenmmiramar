@@ -2,7 +2,7 @@ import { component$, Slot } from "@builder.io/qwik";
 import Header from "~/components/Header";
 import Footer from "~/components/Footer";
 import { RequestHandler } from "@builder.io/qwik-city";
-import {guessLocale, locales} from 'compiled-i18n'
+import { guessLocale, locales } from 'compiled-i18n'
 
 const replaceLocale = (pathname: string, oldLocale: string, locale: string) => {
 	const idx = pathname.indexOf(oldLocale)
@@ -29,23 +29,23 @@ export const onRequest: RequestHandler = async ({
 		const path =
 			// You can use `__` as the locale in URLs to auto-select it
 			params.locale === '__' ||
-			/^([a-z]{2})([_-]([a-z]{2}))?$/i.test(params.locale)
+				/^([a-z]{2})([_-]([a-z]{2}))?$/i.test(params.locale)
 				? // invalid locale
-					'/' + replaceLocale(pathname, params.locale, guessedLocale)
+				'/' + replaceLocale(pathname, params.locale, guessedLocale)
 				: // no locale
-					`/${guessedLocale}${pathname}`
+				`/${guessedLocale}${pathname}`
 		throw redirect(301, `${path}${url.search}`)
 	}
 }
 
 export default component$(() => {
-  return (
-    <div class="min-h-screen flex flex-col">
-      <Header />
-      <main class="flex-1">
-        <Slot />
-      </main>
-      <Footer />
-    </div>
-  );
+	return (
+		<div class="min-h-screen flex flex-col">
+			<Header />
+			<main class="flex-1">
+				<Slot />
+			</main>
+			<Footer />
+		</div>
+	);
 });
