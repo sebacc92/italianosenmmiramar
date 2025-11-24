@@ -17,28 +17,28 @@ import {
   getStrapiImageSrcSet
 } from "~/utils/strapi";
 
-const QUERY_HOME_PAGE = {
-  populate: {
-    sections: {
-      on: {
-        "layout.hero-section": {
-          populate: {
-            imagenes: {
-              fields: ["url", "alternativeText"],
-            },
-            link: {
-              populate: true
-            }
-          },
-        },
-      }
-    }
-  },
-}
+// const QUERY_HOME_PAGE = {
+//   populate: {
+//     sections: {
+//       on: {
+//         "layout.hero-section": {
+//           populate: {
+//             imagenes: {
+//               fields: ["url", "alternativeText"],
+//             },
+//             link: {
+//               populate: true
+//             }
+//           },
+//         },
+//       }
+//     }
+//   },
+// }
 
 export const useGetHomePage = routeLoader$(async () => {
   try {
-    const query = stringify(QUERY_HOME_PAGE, { encodeValuesOnly: true });
+    // const query = stringify(QUERY_HOME_PAGE, { encodeValuesOnly: true });
     const res = await fetch(`${BASE_URL}/api/home-page`);
     if (!res.ok) throw new Error('Failed to fetch data from Strapi');
     const data = await res.json() as any;
@@ -139,7 +139,7 @@ export default component$(() => {
         <div class="container mx-auto px-4 relative z-10">
           <div class="text-center mb-16">
             <span class="text-green-600 font-bold tracking-wider uppercase text-sm mb-2 block">{_`Lo que hacemos`}</span>
-            <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4 font-serif">
+            <h2 id="services" class="text-4xl md:text-5xl font-bold text-gray-900 mb-4 font-serif">
               {_`Nuestros Servicios`}
             </h2>
             <div class="w-24 h-1 bg-gradient-to-r from-green-600 via-white to-red-600 mx-auto rounded-full mb-6"></div>
@@ -150,7 +150,7 @@ export default component$(() => {
 
           <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-4 max-w-7xl mx-auto">
             {/* Card 1: Idiomas */}
-            <Link href={`/${currentLocale}/clases`} class="group">
+            <Link href={`/${currentLocale}/idiomas`} class="group">
               <div class="h-full bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 hover:border-green-200 hover:-translate-y-2 relative overflow-hidden">
                 <div class="absolute top-0 right-0 w-32 h-32 bg-green-50 rounded-bl-full -mr-16 -mt-16 transition-transform group-hover:scale-110"></div>
                 <div class="relative z-10">
