@@ -2,7 +2,6 @@ import { component$ } from "@builder.io/qwik";
 import { type DocumentHead, Link } from "@builder.io/qwik-city";
 import { _ } from "compiled-i18n";
 import { LuArrowRight, LuLanguages } from "@qwikest/icons/lucide";
-import { Button } from "~/components/ui/button/button";
 import { Card } from "~/components/ui/card/card";
 import ClasesItalianoImg from "~/media/clases-italiano.jpeg?jsx";
 
@@ -24,11 +23,13 @@ export default component$(() => {
                     {/* Italian Card */}
                     <Link href="italiano" class="group">
                         <Card.Root class="h-full overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border-green-200 hover:border-green-400">
-                            <div class="relative h-48 overflow-hidden">
-                                <div class="absolute inset-0 bg-green-900/20 group-hover:bg-green-900/10 transition-colors z-10"></div>
-                                <ClasesItalianoImg class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
-                                <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent z-20">
-                                    <span class="text-white font-bold text-lg">{_`Italiano`}</span>
+                            <div class="relative h-48 overflow-hidden bg-green-900 flex items-center justify-center">
+                                <div class="absolute inset-0 z-0">
+                                    <ClasesItalianoImg class="w-full h-full object-cover opacity-60 group-hover:opacity-70 transition-opacity" />
+                                </div>
+                                <div class="absolute inset-0 bg-green-900/30 z-10"></div>
+                                <div class="relative z-20 text-white text-center">
+                                    <span class="text-5xl font-bold tracking-wider">ITALIANO</span>
                                 </div>
                             </div>
                             <Card.Content class="p-6">

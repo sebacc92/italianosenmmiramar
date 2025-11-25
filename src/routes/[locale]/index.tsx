@@ -166,7 +166,24 @@ export default component$(() => {
               </div>
             </Link>
 
-            {/* Card 2: Ciudadanía */}
+            {/* Card 2: Salones */}
+            <Link href={`/${currentLocale}/alquiler-salones`} class="group">
+              <div class="h-full bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 hover:border-gray-200 hover:-translate-y-2 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-gray-50 rounded-bl-full -mr-16 -mt-16 transition-transform group-hover:scale-110"></div>
+                <div class="relative z-10">
+                  <div class="w-14 h-14 bg-gray-100 text-gray-600 rounded-xl flex items-center justify-center mb-6 group-hover:bg-gray-600 group-hover:text-white transition-colors">
+                    <LuBuilding2 class="w-7 h-7" />
+                  </div>
+                  <h3 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-gray-700 transition-colors">{_`Salones`}</h3>
+                  <p class="text-gray-600 mb-6 leading-relaxed">{_`Espacios equipados y versátiles para tus reuniones, capacitaciones y celebraciones.`}</p>
+                  <span class="inline-flex items-center text-gray-600 font-semibold group-hover:translate-x-1 transition-transform">
+                    {_`Ver espacios`} <LuArrowRight class="ml-2 w-4 h-4" />
+                  </span>
+                </div>
+              </div>
+            </Link>
+
+            {/* Card 3: Ciudadanía */}
             <Link href={`/${currentLocale}/tramites`} class="group">
               <div class="h-full bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 hover:border-red-200 hover:-translate-y-2 relative overflow-hidden">
                 <div class="absolute top-0 right-0 w-32 h-32 bg-red-50 rounded-bl-full -mr-16 -mt-16 transition-transform group-hover:scale-110"></div>
@@ -183,7 +200,7 @@ export default component$(() => {
               </div>
             </Link>
 
-            {/* Card 3: Cultura */}
+            {/* Card 4: Eventos */}
             <Link href={`/${currentLocale}/eventos`} class="group">
               <div class="h-full bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 hover:border-green-200 hover:-translate-y-2 relative overflow-hidden">
                 <div class="absolute top-0 right-0 w-32 h-32 bg-green-50 rounded-bl-full -mr-16 -mt-16 transition-transform group-hover:scale-110"></div>
@@ -195,23 +212,6 @@ export default component$(() => {
                   <p class="text-gray-600 mb-6 leading-relaxed">{_`Exposiciones, talleres de arte, música y eventos que promueven nuestra herencia cultural.`}</p>
                   <span class="inline-flex items-center text-green-600 font-semibold group-hover:translate-x-1 transition-transform">
                     {_`Ver agenda`} <LuArrowRight class="ml-2 w-4 h-4" />
-                  </span>
-                </div>
-              </div>
-            </Link>
-
-            {/* Card 4: Salones */}
-            <Link href={`/${currentLocale}/alquiler-salones`} class="group">
-              <div class="h-full bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 hover:border-gray-200 hover:-translate-y-2 relative overflow-hidden">
-                <div class="absolute top-0 right-0 w-32 h-32 bg-gray-50 rounded-bl-full -mr-16 -mt-16 transition-transform group-hover:scale-110"></div>
-                <div class="relative z-10">
-                  <div class="w-14 h-14 bg-gray-100 text-gray-600 rounded-xl flex items-center justify-center mb-6 group-hover:bg-gray-600 group-hover:text-white transition-colors">
-                    <LuBuilding2 class="w-7 h-7" />
-                  </div>
-                  <h3 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-gray-700 transition-colors">{_`Salones`}</h3>
-                  <p class="text-gray-600 mb-6 leading-relaxed">{_`Espacios equipados y versátiles para tus reuniones, capacitaciones y celebraciones.`}</p>
-                  <span class="inline-flex items-center text-gray-600 font-semibold group-hover:translate-x-1 transition-transform">
-                    {_`Ver espacios`} <LuArrowRight class="ml-2 w-4 h-4" />
                   </span>
                 </div>
               </div>
