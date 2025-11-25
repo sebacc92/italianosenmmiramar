@@ -17,32 +17,66 @@ import {
   getStrapiImageSrcSet
 } from "~/utils/strapi";
 
-// const QUERY_HOME_PAGE = {
-//   populate: {
-//     sections: {
-//       on: {
-//         "layout.hero-section": {
-//           populate: {
-//             imagenes: {
-//               fields: ["url", "alternativeText"],
-//             },
-//             link: {
-//               populate: true
-//             }
-//           },
-//         },
-//       }
-//     }
-//   },
-// }
+// Interfaces para Strapi Home Page
+interface StrapiImage {
+  url: string;
+  alternativeText?: string;
+}
 
-export const useGetHomePage = routeLoader$(async () => {
+interface StrapiLink {
+  id: number;
+  url?: string;
+  text?: string;
+}
+
+interface StrapiHeroSection {
+  __component: 'layout.hero-section';
+  id: number;
+  titulo: string;
+  subtitulo: string;
+  imagenes: StrapiImage[] | null;
+  link: StrapiLink | null;
+}
+
+interface StrapiHomePageResponse {
+  hero: StrapiHeroSection[];
+}
+
+const QUERY_HOME_PAGE = {
+  populate: {
+    hero: {
+      on: {
+        "layout.hero-section": {
+          populate: {
+            imagenes: {
+              fields: ["url", "alternativeText"],
+            },
+            link: true
+          }
+        }
+      }
+    }
+  }
+}
+
+export const useGetHomePage = routeLoader$(async ({ status }) => {
   try {
-    // const query = stringify(QUERY_HOME_PAGE, { encodeValuesOnly: true });
-    const res = await fetch(`${BASE_URL}/api/home-page`);
-    if (!res.ok) throw new Error('Failed to fetch data from Strapi');
-    const data = await res.json() as any;
-    return data;
+    const query = stringify(QUERY_HOME_PAGE, { encodeValuesOnly: true });
+    const res = await fetch(`${BASE_URL}/api/home-page?${query}`);
+    if (!res.ok) {
+      console.warn("Failed to fetch home page data from Strapi");
+      status(404);
+      return [];
+    }
+    const data = await res.json() as { data: StrapiHomePageResponse };
+
+    if (!data.data.hero) {
+      console.warn("Failed to fetch home page data from Strapi");
+      status(404);
+      return [];
+    }
+
+    return data.data.hero;
   } catch (error) {
     console.error("Error fetching home page data:", error);
     return null;
@@ -122,9 +156,8 @@ export default component$(() => {
   const homeEventos = useHomeEventos();
   const currentLocale = getLocale();
 
-  const heroData = signalHomePage.value?.data?.sections?.[0];
-  const title = heroData?.titulo || _`Bienvenidos al Círculo Italiano`;
-  const subtitle = heroData?.subtitulo || _`Un espacio de encuentro, cultura y tradición en Miramar`;
+  const title = signalHomePage.value?.[0]?.titulo || _`Bienvenidos al Círculo Italiano`;
+  const subtitle = signalHomePage.value?.[0]?.subtitulo || _`Un espacio de encuentro, cultura y tradición en Miramar`;
 
   return (
     <>

@@ -22,7 +22,6 @@ interface StrapiAutoridad {
     } | null;
 }
 
-// Loader
 export const useAutoridades = routeLoader$(async ({ status }) => {
     try {
 
