@@ -83,10 +83,10 @@ export default component$(() => {
 
             {/* Socials (Desktop) */}
             <div class="hidden md:flex items-center gap-2 border-r border-gray-200 pr-4 mr-2">
-              <a href="https://www.facebook.com/circuloitalianomiramar" target="_blank" rel="noopener noreferrer" class="text-gray-500 hover:text-[#1877F2] transition-colors">
+              <a href="https://www.facebook.com/italianosenmiramar" target="_blank" rel="noopener noreferrer" class="text-gray-500 hover:text-[#1877F2] transition-colors">
                 <LuFacebook class="h-5 w-5" />
               </a>
-              <a href="https://www.instagram.com/circuloitalianomiramar" target="_blank" rel="noopener noreferrer" class="text-gray-500 hover:text-[#E4405F] transition-colors">
+              <a href="https://www.instagram.com/italianosenmiramar" target="_blank" rel="noopener noreferrer" class="text-gray-500 hover:text-[#E4405F] transition-colors">
                 <LuInstagram class="h-5 w-5" />
               </a>
             </div>
@@ -180,10 +180,10 @@ export default component$(() => {
                     <span>2291 433766</span>
                   </a>
                   <div class="mt-4 flex gap-4 px-4">
-                    <a href="https://www.facebook.com/circuloitalianomiramar" class="rounded-full bg-blue-50 p-3 text-[#1877F2] transition-colors hover:bg-blue-100">
+                    <a href="https://www.facebook.com/italianosenmiramar" class="rounded-full bg-blue-50 p-3 text-[#1877F2] transition-colors hover:bg-blue-100">
                       <LuFacebook class="h-6 w-6" />
                     </a>
-                    <a href="https://www.instagram.com/circuloitalianomiramar" class="rounded-full bg-pink-50 p-3 text-[#E4405F] transition-colors hover:bg-pink-100">
+                    <a href="https://www.instagram.com/italianosenmiramar" class="rounded-full bg-pink-50 p-3 text-[#E4405F] transition-colors hover:bg-pink-100">
                       <LuInstagram class="h-6 w-6" />
                     </a>
                   </div>

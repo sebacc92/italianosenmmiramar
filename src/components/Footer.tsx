@@ -31,7 +31,7 @@ export default component$(() => {
                         </p>
                         <div class="flex gap-4">
                             <a
-                                href="https://www.facebook.com/circuloitalianomiramar"
+                                href="https://www.facebook.com/italianosenmiramar"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 class="bg-white/5 hover:bg-[#1877F2] p-2 rounded-full transition-all duration-300 hover:-translate-y-1"
@@ -40,7 +40,7 @@ export default component$(() => {
                                 <LuFacebook class="h-5 w-5" />
                             </a>
                             <a
-                                href="https://www.instagram.com/circuloitalianomiramar"
+                                href="https://www.instagram.com/italianosenmiramar"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 class="bg-white/5 hover:bg-[#E4405F] p-2 rounded-full transition-all duration-300 hover:-translate-y-1"

@@ -7,6 +7,7 @@ import { Card } from "~/components/ui/card/card";
 import { Input } from "~/components/ui/input/input";
 import { Label } from "~/components/ui/label/label";
 import { Textarea } from "~/components/ui/textarea/textarea";
+import HeroInglesImg from "~/media/hero-ingles.avif";
 
 export const useSubmitPreInscripcionIngles = routeAction$(
   async (data) => {
@@ -52,10 +53,18 @@ export default component$(() => {
     <div class="flex min-h-screen flex-col">
       <main class="flex-1">
         {/* Hero Section */}
-        <section class="relative bg-blue-700 py-20 text-white overflow-hidden">
-          {/* Background overlay */}
-          <div class="absolute inset-0 bg-black/10"></div>
-          <div class="container relative mx-auto px-4">
+        <section class="relative py-20 text-white overflow-hidden">
+          {/* Background Image & Overlay */}
+          <div class="absolute inset-0 z-0">
+            <img
+              src={HeroInglesImg}
+              alt="Hero English"
+              class="w-full h-full object-cover"
+            />
+            <div class="absolute inset-0 bg-black/50"></div>
+          </div>
+
+          <div class="container relative z-10 mx-auto px-4">
             <div class="grid gap-12 md:grid-cols-2 items-center">
               <div class="space-y-6">
                 <h1 class="text-5xl font-bold leading-tight">
