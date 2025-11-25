@@ -1,7 +1,7 @@
 import { component$ } from "@builder.io/qwik";
 import { Link, routeLoader$, type DocumentHead } from "@builder.io/qwik-city";
 import { _, getLocale } from "compiled-i18n";
-import { LuCalendar, LuLanguages, LuFileText, LuPalette, LuBuilding2, LuArrowRight, LuMapPin } from "@qwikest/icons/lucide";
+import { LuCalendar, LuLanguages, LuFileText, LuPalette, LuBuilding2, LuArrowRight, LuMapPin, LuMusic, LuBrush, LuApple, LuGraduationCap } from "@qwikest/icons/lucide";
 import HeroSlider from "~/components/HeroSlider/HeroSlider";
 import { Button } from "~/components/ui";
 import ImageStory from "~/media/story.jpg?h=500&jsx";
@@ -139,7 +139,7 @@ export default component$(() => {
         <div class="container mx-auto px-4 relative z-10">
           <div class="text-center mb-16">
             <span class="text-green-600 font-bold tracking-wider uppercase text-sm mb-2 block">{_`Lo que hacemos`}</span>
-            <h2 id="services" class="text-4xl md:text-5xl font-bold text-gray-900 mb-4 font-serif">
+            <h2 id="servicios" class="text-4xl md:text-5xl font-bold text-gray-900 mb-4 font-serif">
               {_`Nuestros Servicios`}
             </h2>
             <div class="w-24 h-1 bg-gradient-to-r from-green-600 via-white to-red-600 mx-auto rounded-full mb-6"></div>
@@ -209,13 +209,81 @@ export default component$(() => {
                     <LuPalette class="w-7 h-7" />
                   </div>
                   <h3 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-green-700 transition-colors">{_`Cultura y Arte`}</h3>
-                  <p class="text-gray-600 mb-6 leading-relaxed">{_`Exposiciones, talleres de arte, música y eventos que promueven nuestra herencia cultural.`}</p>
+                  <p class="text-gray-600 mb-6 leading-relaxed">{_`Exposiciones, música y eventos que promueven nuestra herencia cultural.`}</p>
                   <span class="inline-flex items-center text-green-600 font-semibold group-hover:translate-x-1 transition-transform">
                     {_`Ver agenda`} <LuArrowRight class="ml-2 w-4 h-4" />
                   </span>
                 </div>
               </div>
             </Link>
+
+            {/* Card 5: Escuela de Danzas */}
+            <Link href={`/${currentLocale}/clases/danzas`} class="group">
+              <div class="h-full bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 hover:border-pink-200 hover:-translate-y-2 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-pink-50 rounded-bl-full -mr-16 -mt-16 transition-transform group-hover:scale-110"></div>
+                <div class="relative z-10">
+                  <div class="w-14 h-14 bg-pink-100 text-pink-600 rounded-xl flex items-center justify-center mb-6 group-hover:bg-pink-600 group-hover:text-white transition-colors">
+                    <LuMusic class="w-7 h-7" />
+                  </div>
+                  <h3 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-pink-700 transition-colors">{_`Escuela de Danzas`}</h3>
+                  <p class="text-gray-600 mb-6 leading-relaxed">{_`Ritmos en Acción. Danza Jazz, Urbano, Clásico y más para todas las edades.`}</p>
+                  <span class="inline-flex items-center text-pink-600 font-semibold group-hover:translate-x-1 transition-transform">
+                    {_`Ver clases`} <LuArrowRight class="ml-2 w-4 h-4" />
+                  </span>
+                </div>
+              </div>
+            </Link>
+
+            {/* Card 6: Taller de Arte */}
+            <Link href={`/${currentLocale}/clases/arte`} class="group">
+              <div class="h-full bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 hover:border-purple-200 hover:-translate-y-2 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-purple-50 rounded-bl-full -mr-16 -mt-16 transition-transform group-hover:scale-110"></div>
+                <div class="relative z-10">
+                  <div class="w-14 h-14 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center mb-6 group-hover:bg-purple-600 group-hover:text-white transition-colors">
+                    <LuBrush class="w-7 h-7" />
+                  </div>
+                  <h3 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-purple-700 transition-colors">{_`Taller de Arte`}</h3>
+                  <p class="text-gray-600 mb-6 leading-relaxed">{_`Espacio creativo para desarrollar tus habilidades en pintura y dibujo.`}</p>
+                  <span class="inline-flex items-center text-purple-600 font-semibold group-hover:translate-x-1 transition-transform">
+                    {_`Más info`} <LuArrowRight class="ml-2 w-4 h-4" />
+                  </span>
+                </div>
+              </div>
+            </Link>
+
+            {/* Card 7: Nutrición y Salud */}
+            <Link href={`/${currentLocale}/servicios/nutricion`} class="group">
+              <div class="h-full bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 hover:border-green-200 hover:-translate-y-2 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-green-50 rounded-bl-full -mr-16 -mt-16 transition-transform group-hover:scale-110"></div>
+                <div class="relative z-10">
+                  <div class="w-14 h-14 bg-green-100 text-green-600 rounded-xl flex items-center justify-center mb-6 group-hover:bg-green-600 group-hover:text-white transition-colors">
+                    <LuApple class="w-7 h-7" />
+                  </div>
+                  <h3 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-green-700 transition-colors">{_`Nutrición y Salud`}</h3>
+                  <p class="text-gray-600 mb-6 leading-relaxed">{_`Consultorio de nutricionista disponible para socios con aranceles preferenciales.`}</p>
+                  <span class="inline-flex items-center text-green-600 font-semibold group-hover:translate-x-1 transition-transform">
+                    {_`Consultar`} <LuArrowRight class="ml-2 w-4 h-4" />
+                  </span>
+                </div>
+              </div>
+            </Link>
+
+            {/* Card 8: Universidad Siglo 21 */}
+            <a href="https://www.21.edu.ar/" target="_blank" rel="noopener noreferrer" class="group">
+              <div class="h-full bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 hover:border-orange-200 hover:-translate-y-2 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-orange-50 rounded-bl-full -mr-16 -mt-16 transition-transform group-hover:scale-110"></div>
+                <div class="relative z-10">
+                  <div class="w-14 h-14 bg-orange-100 text-orange-600 rounded-xl flex items-center justify-center mb-6 group-hover:bg-orange-600 group-hover:text-white transition-colors">
+                    <LuGraduationCap class="w-7 h-7" />
+                  </div>
+                  <h3 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-orange-700 transition-colors">{_`Universidad Siglo 21`}</h3>
+                  <p class="text-gray-600 mb-6 leading-relaxed">{_`Centro de Aprendizaje Universitario. Carreras de grado y pregrado.`}</p>
+                  <span class="inline-flex items-center text-orange-600 font-semibold group-hover:translate-x-1 transition-transform">
+                    {_`Ir al sitio`} <LuArrowRight class="ml-2 w-4 h-4" />
+                  </span>
+                </div>
+              </div>
+            </a>
           </div>
         </div>
       </section>

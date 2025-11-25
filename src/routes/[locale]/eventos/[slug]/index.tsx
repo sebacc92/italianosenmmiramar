@@ -146,7 +146,6 @@ export const useEvento = routeLoader$(async ({ params }) => {
 
     const data = await res.json() as { data: StrapiEvento };
 
-    console.log('data2', data);
     if (!data.data) {
       return null;
     }

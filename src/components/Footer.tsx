@@ -153,10 +153,14 @@ export default component$(() => {
                     <p>
                         © {currentYear} Mutual Cultural Círculo Italiano Joven Italia. {_`Todos los derechos reservados.`}
                     </p>
-                    <div class="flex items-center gap-6">
-                        <Link href="/privacidad" class="hover:text-white transition-colors">{_`Política de Privacidad`}</Link>
-                        <Link href="/terminos" class="hover:text-white transition-colors">{_`Términos de Uso`}</Link>
-                    </div>
+                    <a
+                        href="https://cleverisma.com/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="hover:text-white transition-colors flex items-center gap-2"
+                    >
+                        Desarrollado por <span class="font-semibold">Cleverisma</span>
+                    </a>
                 </div>
 
                 {/* Tricolor Line Bottom */}

@@ -21,7 +21,7 @@ export default component$(() => {
     { name: _`Inicio`, href: `/${currentLocale}` },
     { name: _`Autoridades`, href: `/${currentLocale}/autoridades` },
     { name: _`Nosotros`, href: `/${currentLocale}/nosotros` },
-    { name: _`Servicios`, href: `/${currentLocale}/servicios` },
+    { name: _`Servicios`, href: `#servicios` },
     { name: _`Eventos`, href: `/${currentLocale}/eventos` },
     { name: _`Asociate`, href: `/${currentLocale}/asociate` },
     { name: _`Contacto`, href: `/${currentLocale}/contacto` },

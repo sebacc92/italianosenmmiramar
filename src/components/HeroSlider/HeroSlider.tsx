@@ -6,21 +6,21 @@ import styles from './HeroSlider.css?inline';
 export default component$(({ title, description }: { title: string, description: string }) => {
     useStyles$(styles);
     const currentLocale = getLocale();
-    
+
     return (
         <section class="hero-section">
             {/* Background image with parallax effect */}
             <div class="hero-bg-wrapper">
-                <img 
-                    src="/images/exterior_institucion.jpg" 
-                    alt="Sede del Círculo Italiano" 
+                <img
+                    src="/images/exterior_institucion.jpg"
+                    alt="Sede del Círculo Italiano"
                     class="hero-bg-image"
                 />
             </div>
-            
+
             {/* Refined gradient overlay - lighter and more elegant */}
             <div class="hero-overlay-gradient"></div>
-            
+
             {/* Subtle vignette effect */}
             <div class="hero-overlay-vignette"></div>
 
@@ -57,16 +57,16 @@ export default component$(({ title, description }: { title: string, description:
                             <h1 class="hero-title">
                                 {title}
                             </h1>
-                            
+
                             {/* Description with enhanced readability */}
                             <p class="hero-description">
                                 {description}
                             </p>
-                            
+
                             {/* CTA Button with modern design */}
                             <div class="hero-cta-wrapper">
-                                <Link 
-                                    href={`/${currentLocale}/eventos`} 
+                                <Link
+                                    href={`/${currentLocale}/eventos`}
                                     class="hero-cta-button"
                                 >
                                     <span class="hero-cta-content">
@@ -101,8 +101,8 @@ export default component$(({ title, description }: { title: string, description:
             </div>
 
             {/* Enhanced scroll indicator - Clickeable */}
-            <a 
-                href="#services" 
+            <a
+                href="#servicios"
                 class="hero-scroll-indicator"
                 aria-label="Ir a servicios"
             >
